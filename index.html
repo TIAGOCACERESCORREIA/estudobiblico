@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudo Bíblico Interativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Sacred Parchment -->
+    <!-- Application Structure Plan: A multi-book SPA. Audio features are now available in "Resumo dos Livros", "Explorar Capítulos", and "Personagens", providing a comprehensive auditory experience. -->
+    <!-- Visualization & Content Choices: 
+        - Added reference to Mons. Jonas Abib's book in the "Visão Geral" section.
+        - Feature: Sequential character playback ("Character Marathon Mode") added to the "Personagens" view.
+        - Feature: Sequential chapter playback ("Marathon Mode") added to the "Explorar Capítulos" view.
+        - Feature: Sequential book playback ("Book Marathon Mode") added to the "Resumo dos Livros" view.
+        - Feature: Added book ordering selection ("Bíblia Ave Maria" vs. "Mons. Jonas Abib").
+        - Feature: Contextual Audio Players. Goal: Provide auditory summaries for different content types. Viz/Method: Reusable audio player logic applied to three sections. Interaction: Each section (Book, Chapter, Character) has its own audio player that synthesizes the relevant text with full playback and speed controls. Justification: Creates a consistent and powerful multi-modal learning tool as requested. Method: A single, reusable `setupAudioHandler` function is now parameterized to manage different UI elements and text generation functions, reducing code duplication.
+        - Data Integrity: All data for Genesis, John, Acts, and 1 John is now complete.
+        - Thematic Chart: The filterable chart is fully functional.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body { font-family: 'Source Sans Pro', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Merriweather', serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 450px;
+        }
+        .nav-button {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .nav-button.active {
+            background-color: #a16207;
+            color: #ffffff;
+        }
+        .speed-btn.active {
+            background-color: #a16207;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-stone-800">
+
+    <div id="app" class="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-amber-900">Estudo Bíblico Interativo</h1>
+            <h2 class="text-2xl md:text-3xl text-amber-800">Antigo e Novo Testamento</h2>
+        </header>
+
+        <nav class="flex flex-wrap justify-center mb-8 bg-amber-100 rounded-lg p-2 shadow-sm gap-2">
+            <button data-view="visaoGeral" class="nav-button active text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Visão Geral</button>
+            <button data-view="resumoLivros" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Resumo dos Livros</button>
+            <button data-view="explorarCapitulos" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Explorar Capítulos</button>
+            <button data-view="personagens" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Personagens</button>
+            <button data-view="analiseTematica" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Análise Temática</button>
+        </nav>
+
+        <main>
+            <!-- Visão Geral View -->
+            <section id="visaoGeral" class="view">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Configurações de Estudo</h3>
+                     <div class="mb-8 flex flex-col sm:flex-row items-center justify-center gap-4 bg-amber-50 p-4 rounded-lg">
+                        <label for="ordinationSelect" class="text-lg font-semibold text-amber-900">Ordem dos Livros:</label>
+                        <select id="ordinationSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                            <option value="aveMaria">Ordenação Bíblia Ave Maria</option>
+                            <option value="jonasAbib">Ordenação Mons. Jonas Abib</option>
+                        </select>
+                    </div>
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Metodologia de Estudo</h3>
+                     <div class="space-y-4 text-stone-700">
+                        <p>Para tornar prático nosso estudo da Palavra de Deus, podemos usar um método simples e profundo, identificando no texto sagrado as ordens, as promessas e os princípios que o Senhor nos revela.</p>
+                        <p>Primeiro, Deus nos dá <strong class="text-red-700">ORDENS</strong>. São convites diretos à ação. "Ide e anunciai!", "Arrependei-vos!", "Não temais!". Em nosso dia a dia, essa ordem se traduz em gestos concretos: a coragem de falar de nossa fé, a paciência com um familiar, a decisão de perdoar. São os "ide" de Deus em nossa rotina, que nos tiram da paralisia e nos colocam em movimento.</p>
+                        <p>Segundo, em meio às ordens, Deus nos sustenta com suas <strong class="text-green-700">PROMESSAS</strong>. Que maravilha! Ele não nos manda para a batalha de mãos vazias. A grande promessa que permeia toda a Escritura é: "Eu estarei convosco!", "Recebereis a força do alto!", "A tua descendência possuirá a terra!". Quando o medo bater ou a dificuldade parecer insuperável, devemos nos agarrar a estas promessas. Elas são a nossa certeza de que a obra não é nossa, mas de Deus, e que Ele a levará a bom termo.</p>
+                        <p>Por fim, a Palavra nos revela os <strong class="text-blue-700">PRINCÍPIOS</strong> do Reino. São as verdades eternas, o "modo de funcionar" de Deus e de sua criação. Vemos princípios fundamentais como o da comunhão fraterna, o da oração constante, o da aliança, o da semeadura e colheita, e o da soberania divina. Viver estes princípios é construir, já aqui na terra, a civilização do amor que Cristo veio inaugurar e que desde o princípio Deus planejou para a humanidade.</p>
+                     </div>
+                     <div class="mt-8 pt-4 border-t-2 border-amber-100">
+                        <p class="text-sm text-stone-600 italic">
+                            <strong>Referência:</strong> O método de estudo apresentado (Ordens, Promessas e Princípios) foi inspirado nos ensinamentos do Monsenhor Jonas Abib, conforme partilhado em seu livro 
+                            <a href="https://loja.cancaonova.com/livro-a-biblia-no-meu-dia-a-dia" target="_blank" class="text-amber-700 hover:underline hover:text-amber-800 transition-colors">"A Bíblia no meu dia-a-dia"</a>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resumo dos Livros View -->
+            <section id="resumoLivros" class="view hidden">
+                <div class="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4">
+                     <label for="bookSelect" class="text-lg font-semibold text-amber-900">Selecione um Livro:</label>
+                     <select id="bookSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                </div>
+                 <div id="audioSectionBook" class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Podcast do Livro Individual</h3>
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                         <button id="playAudioBtnBook" class="bg-sky-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-sky-800 transition duration-300 shadow-md">🎙️ Ouvir Resumo</button>
+                         <button id="pauseAudioBtnBook" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
+                         <button id="resumeAudioBtnBook" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
+                         <button id="stopAudioBtnBook" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
+                    </div>
+                     <div class="flex items-center justify-center gap-2">
+                        <span class="text-sm font-semibold">Velocidade:</span>
+                        <button data-speed="1" class="speed-btn-book active bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1x</button>
+                        <button data-speed="1.5" class="speed-btn-book bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
+                        <button data-speed="2" class="speed-btn-book bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
+                     </div>
+                     <p id="audioStatusBook" class="text-center text-sm text-stone-500 mt-2"></p>
+                </div>
+                 <!-- Book Marathon Player Section -->
+                <div id="audioSectionBookMarathon" class="mt-6 bg-white rounded-xl shadow-md p-6 border-t-4 border-amber-300">
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Maratona de Livros</h3>
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                         <button id="playAudioBtnBookMarathon" class="bg-indigo-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-indigo-800 transition duration-300 shadow-md">📚 Ouvir Todos os Livros</button>
+                         <button id="pauseAudioBtnBookMarathon" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
+                         <button id="resumeAudioBtnBookMarathon" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
+                         <button id="stopAudioBtnBookMarathon" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
+                    </div>
+                     <div class="flex items-center justify-center gap-2">
+                        <span class="text-sm font-semibold">Velocidade:</span>
+                        <button data-speed="1" class="speed-btn-book-marathon active bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1x</button>
+                        <button data-speed="1.5" class="speed-btn-book-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
+                        <button data-speed="2" class="speed-btn-book-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
+                     </div>
+                     <p id="audioStatusBookMarathon" class="text-center text-sm text-stone-500 mt-2"></p>
+                </div>
+                <div id="bookContent" class="bg-white rounded-xl shadow-md p-6 min-h-[400px] mt-6">
+                </div>
+            </section>
+
+            <!-- Explorar Capítulos View -->
+            <section id="explorarCapitulos" class="view hidden">
+                <div class="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4">
+                     <label for="chapterBookSelect" class="text-lg font-semibold text-amber-900">Selecione um Livro:</label>
+                     <select id="chapterBookSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                     <label for="chapterSelect" class="text-lg font-semibold text-amber-900">Selecione um Capítulo:</label>
+                     <select id="chapterSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                </div>
+                <div id="chapterContent" class="bg-white rounded-xl shadow-md p-6 min-h-[400px]">
+                </div>
+                <div id="audioSectionChapter" class="mt-6 bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Podcast do Capítulo Individual</h3>
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                         <button id="playAudioBtnChapter" class="bg-sky-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-sky-800 transition duration-300 shadow-md">🎙️ Ouvir Resumo do Capítulo</button>
+                         <button id="pauseAudioBtnChapter" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
+                         <button id="resumeAudioBtnChapter" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
+                         <button id="stopAudioBtnChapter" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
+                    </div>
+                     <div class="flex items-center justify-center gap-2">
+                        <span class="text-sm font-semibold">Velocidade:</span>
+                        <button data-speed="1" class="speed-btn-chapter active bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1x</button>
+                        <button data-speed="1.5" class="speed-btn-chapter bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
+                        <button data-speed="2" class="speed-btn-chapter bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
+                     </div>
+                     <p id="audioStatusChapter" class="text-center text-sm text-stone-500 mt-2"></p>
+                </div>
+                 <!-- Marathon Player Section -->
+                <div id="audioSectionMarathon" class="mt-6 bg-white rounded-xl shadow-md p-6 border-t-4 border-amber-300">
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Maratona de Capítulos</h3>
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                         <button id="playAudioBtnMarathon" class="bg-purple-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-800 transition duration-300 shadow-md">🎧 Ouvir Todos os Capítulos</button>
+                         <button id="pauseAudioBtnMarathon" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
+                         <button id="resumeAudioBtnMarathon" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
+                         <button id="stopAudioBtnMarathon" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
+                    </div>
+                     <div class="flex items-center justify-center gap-2">
+                        <span class="text-sm font-semibold">Velocidade:</span>
+                        <button data-speed="1" class="speed-btn-marathon active bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1x</button>
+                        <button data-speed="1.5" class="speed-btn-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
+                        <button data-speed="2" class="speed-btn-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
+                     </div>
+                     <p id="audioStatusMarathon" class="text-center text-sm text-stone-500 mt-2"></p>
+                </div>
+            </section>
+
+            <!-- Personagens View -->
+            <section id="personagens" class="view hidden">
+                <div class="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4">
+                    <label for="charBookSelect" class="text-lg font-semibold text-amber-900">Livro:</label>
+                    <select id="charBookSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                    <label for="characterSelect" class="text-lg font-semibold text-amber-900">Personagem:</label>
+                    <select id="characterSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                </div>
+                <div id="characterContent" class="bg-white rounded-xl shadow-md p-6 min-h-[200px] mb-6">
+                    <p class="text-center text-stone-500">Selecione um livro e um personagem para ver um resumo sobre ele.</p>
+                </div>
+                 <div id="audioSectionChar" class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Áudio do Personagem</h3>
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                         <button id="playAudioBtnChar" class="bg-sky-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-sky-800 transition duration-300 shadow-md">🎙️ Ouvir Resumo do Personagem</button>
+                         <button id="pauseAudioBtnChar" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
+                         <button id="resumeAudioBtnChar" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
+                         <button id="stopAudioBtnChar" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
+                    </div>
+                     <div class="flex items-center justify-center gap-2">
+                        <span class="text-sm font-semibold">Velocidade:</span>
+                        <button data-speed="1" class="speed-btn-char active bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1x</button>
+                        <button data-speed="1.5" class="speed-btn-char bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
+                        <button data-speed="2" class="speed-btn-char bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
+                     </div>
+                     <p id="audioStatusChar" class="text-center text-sm text-stone-500 mt-2"></p>
+                </div>
+                <!-- Character Marathon Player Section -->
+                <div id="audioSectionCharMarathon" class="mt-6 bg-white rounded-xl shadow-md p-6 border-t-4 border-amber-300">
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Maratona de Personagens</h3>
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                         <button id="playAudioBtnCharMarathon" class="bg-purple-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-800 transition duration-300 shadow-md">👥 Ouvir Todos os Personagens</button>
+                         <button id="pauseAudioBtnCharMarathon" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
+                         <button id="resumeAudioBtnCharMarathon" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
+                         <button id="stopAudioBtnCharMarathon" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
+                    </div>
+                     <div class="flex items-center justify-center gap-2">
+                        <span class="text-sm font-semibold">Velocidade:</span>
+                        <button data-speed="1" class="speed-btn-char-marathon active bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1x</button>
+                        <button data-speed="1.5" class="speed-btn-char-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
+                        <button data-speed="2" class="speed-btn-char-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
+                     </div>
+                     <p id="audioStatusCharMarathon" class="text-center text-sm text-stone-500 mt-2"></p>
+                </div>
+            </section>
+
+            <!-- Análise Temática View -->
+            <section id="analiseTematica" class="view hidden">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <div class="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4">
+                        <label for="analysisFilterSelect" class="text-lg font-semibold text-amber-900">Filtrar Análise:</label>
+                        <select id="analysisFilterSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="themesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const bibleData = {
+            'genesis': {
+                name: 'Gênesis',
+                summary: `O livro de Gênesis, cujo nome significa "origem", é o primeiro livro da Bíblia e lança as bases para toda a narrativa da salvação. Escrito por Moisés, ele narra a criação do universo, da Terra e da humanidade por Deus. Apresenta-nos os nossos primeiros pais, Adão e Eva, e a trágica história da queda, o pecado original que introduziu o sofrimento e a morte no mundo, mas que também foi o cenário da primeira promessa de um Redentor (o Protoevangelho). Gênesis relata eventos fundamentais como a história de Caim e Abel, o Dilúvio universal e a aliança de Deus com Noé, e a Torre de Babel. O foco então se volta para os Patriarcas: Abraão, nosso pai na fé, chamado a deixar tudo para seguir a Deus; Isaque, o filho da promessa; e Jacó, cujos doze filhos se tornariam as doze tribos de Israel. A história culmina com a vida de José, vendido como escravo por seus irmãos, mas que, pela Providência Divina, se torna governador do Egito e salva seu povo da fome, preparando o cenário para o livro do Êxodo.`,
+                homily: `<h3>Homilia: Gênesis - O Início da Nossa História de Salvação</h3><div class="space-y-4 text-stone-700"><p>Queridos irmãos e irmãs,</p><p>Ao abrirmos o livro do Gênesis, não estamos apenas lendo contos antigos. Estamos voltando ao início da nossa própria história, ao coração do plano de amor de Deus para cada um de nós. Gênesis nos revela verdades fundamentais sobre quem é Deus, quem nós somos e qual o nosso propósito neste mundo.</p><p>Primeiro, vemos um Deus que é Criador. Do caos, Ele traz a ordem; da escuridão, Ele faz a luz. Tudo o que Ele cria é "bom". E no ápice de Sua criação, Ele nos faz "à Sua imagem e semelhança". Essa é a nossa dignidade original! Não somos um acidente cósmico, mas um pensamento de amor de Deus. Ele nos deu a <strong class="text-red-700">ORDEM</strong> de "crescer e multiplicar", de cuidar da criação, de sermos Seus cooperadores no mundo. Somos chamados à fecundidade, não apenas biológica, mas espiritual e criativa.</p><p>Mas Gênesis também nos mostra a realidade do pecado. A desobediência de Adão e Eva quebra a harmonia original. O medo, a vergonha e a morte entram na história. No entanto, mesmo no momento do julgamento, o coração de Deus se revela misericordioso. Ele faz uma <strong class="text-green-700">PROMESSA</strong> velada, mas poderosa, em Gênesis 3,15: a serpente ferirá o calcanhar da descendência da mulher, mas esta lhe esmagará a cabeça. A Tradição da Igreja sempre viu aqui o primeiro anúncio do Evangelho, a promessa de que um descendente de Eva - Jesus Cristo, nascido da Virgem Maria - triunfaria sobre o mal.</p><p>Ao longo do livro, vemos o <strong class="text-blue-700">PRINCÍPIO</strong> da Aliança em ação. Deus não abandona a humanidade. Ele faz uma aliança com Noé, prometendo nunca mais destruir a terra com um dilúvio. Ele chama Abraão e lhe promete uma descendência incontável e uma terra. Esta aliança é o fio de ouro que percorre toda a Bíblia, culminando na Nova e Eterna Aliança selada no sangue de Cristo.</p><p>A vida dos patriarcas nos ensina sobre a fé. Abraão creu contra toda esperança. Jacó lutou com Deus e foi transformado. José, mesmo traído e humilhado, permaneceu fiel e se tornou um instrumento de salvação. Eles eram homens imperfeitos, como nós, mas que se deixaram guiar pela promessa de Deus.</p><p>Hoje, Gênesis nos convida a lembrar de onde viemos: do coração de um Deus amoroso. Convida-nos a reconhecer nossa necessidade de redenção e a nos agarrarmos às Suas promessas, que encontram seu "sim" definitivo em Jesus Cristo. Que possamos, como Abraão, caminhar pela fé, confiando que o Deus que iniciou uma boa obra em nós é fiel para completá-la. Amém.</p></div>`,
+                chapters: [
+                    { chapter: 1, title: "A Criação do Mundo", orders: [`"Sede fecundos, multiplicai-vos, enchei a terra e submetei-a." (Gn 1,28)`], promises: [`A bênção de Deus sobre a humanidade e o domínio sobre a criação (cf. Gn 1,28).`], principles: [`Deus é o Criador soberano de todas as coisas (cf. Gn 1,1).`, `A criação de Deus é intrinsecamente boa (cf. Gn 1,31).`, `O homem e a mulher são criados à imagem e semelhança de Deus (cf. Gn 1,27).`] },
+                    { chapter: 2, title: "O Jardim do Éden", orders: [`"Podes comer de todas as árvores do jardim. Mas da árvore do conhecimento do bem e do mal não comerás." (Gn 2,16-17)`], promises: [`A provisão de um lar perfeito e de sustento abundante por Deus (cf. Gn 2,8-9).`], principles: [`O trabalho é uma vocação divina e original do homem (cf. Gn 2,15).`, `O matrimônio, a união de um homem e uma mulher, é instituído por Deus (cf. Gn 2,24).`, `A obediência a Deus é a chave para a vida e a comunhão com Ele (cf. Gn 2,17).`] },
+                    { chapter: 3, title: "A Queda do Homem", orders: [`Implícita: Não dar ouvidos à tentação da serpente (cf. Gn 3,1-5).`], promises: [`O Protoevangelho: a promessa de um descendente da mulher que esmagará a cabeça da serpente (cf. Gn 3,15).`], principles: [`O pecado traz como consequência a vergonha, o medo e a separação de Deus (cf. Gn 3,8-10).`, `A desobediência gera sofrimento, dor e morte (cf. Gn 3,16-19).`, `Deus, em sua misericórdia, provê uma cobertura para a nudez do homem (cf. Gn 3,21).`] },
+                    { chapter: 4, title: "Caim e Abel", orders: [`"Se fizeres o bem, não serás porventura aceito? E se não fizeres o bem, o pecado jaz à porta." (Gn 4,7)`], promises: [`A aceitação de Deus para aquele que age bem (cf. Gn 4,7).`], principles: [`A inveja pode levar ao fratricídio (cf. Gn 4,8).`, `Somos responsáveis por nossos irmãos (cf. Gn 4,9).`, `O pecado tem consequências, mas Deus ainda oferece um sinal de proteção (cf. Gn 4,12-15).`] },
+                    { chapter: 5, title: "Os Descendentes de Adão", orders: [], promises: [], principles: [`A genealogia mostra a continuidade da humanidade, mas também a universalidade da morte como consequência do pecado (cf. Gn 5).`, `A fidelidade a Deus pode levar a uma comunhão especial com Ele (o caso de Henoc) (cf. Gn 5,24).`] },
+                    { chapter: 6, title: "A Corrupção da Humanidade", orders: [`"Faze para ti uma arca de madeira." (Gn 6,14)`], promises: [`"Estabelecerei a minha aliança contigo; entrarás na arca, tu e os teus filhos, tua mulher e as mulheres de teus filhos contigo." (Gn 6,18)`], principles: [`A maldade humana pode se espalhar a ponto de entristecer o coração de Deus (cf. Gn 6,5-6).`, `É possível encontrar graça aos olhos do Senhor mesmo em meio a uma geração corrupta (cf. Gn 6,8).`, `A obediência de Noé é total e imediata (cf. Gn 6,22).`] },
+                    { chapter: 7, title: "O Dilúvio", orders: [`"Entra na arca, tu e toda a tua casa." (Gn 7,1)`], promises: [`A salvação da família de Noé e dos animais através da arca (cf. Gn 7,23).`], principles: [`O juízo de Deus sobre o pecado é real e universal (cf. Gn 7,11-12).`, `A obediência à instrução de Deus leva à salvação (cf. Gn 7,5).`] },
+                    { chapter: 8, title: "O Fim do Dilúvio", orders: [`"Sai da arca, tu e tua mulher, e teus filhos e as mulheres de teus filhos." (Gn 8,16)`], promises: [`Deus promete não mais amaldiçoar a terra por causa do homem e manter os ciclos da natureza (cf. Gn 8,21-22).`], principles: [`A primeira ação de Noé ao sair da arca é oferecer um sacrifício de gratidão a Deus (cf. Gn 8,20).`, `Deus se lembra de suas criaturas e age para restaurar a ordem (cf. Gn 8,1).`] },
+                    { chapter: 9, title: "A Aliança com Noé", orders: [`"Não comereis a carne com a sua alma, isto é, com o seu sangue." (Gn 9,4)`], promises: [`"Estabeleço a minha aliança convosco: não será mais destruída toda a carne pelas águas do dilúvio." (Gn 9,11). O arco-íris é o sinal da aliança.`], principles: [`Deus estabelece uma aliança perpétua com toda a criação (cf. Gn 9,12).`, `O respeito pela vida (sangue) é um mandato divino (cf. Gn 9,5-6).`, `A falta de respeito aos pais atrai consequências negativas (cf. Gn 9,20-25).`] },
+                    { chapter: 10, title: "A Tabela das Nações", orders: [], promises: [], principles: [`A ordem de Deus para "encher a terra" começa a se cumprir através dos descendentes de Noé (cf. Gn 10,32).`, `A humanidade se diversifica em nações, línguas e territórios. (cf. Gn 10,5, 20, 31).`] },
+                    { chapter: 11, title: "A Torre de Babel", orders: [`Implícita: Não buscar a autoglorificação em desafio a Deus.`], promises: [], principles: [`O orgulho e a tentativa de alcançar a Deus pelos próprios méritos levam à confusão e à dispersão (cf. Gn 11,4.8).`, `A diversidade de línguas é apresentada como um juízo divino para conter a arrogância humana (cf. Gn 11,7).`, `A genealogia de Sem prepara o caminho para a chamada de Abrão (cf. Gn 11,10-26).`] },
+                    { chapter: 12, title: "A Vocação de Abrão", orders: [`"Sai da tua terra, da tua parentela e da casa de teu pai, para a terra que eu te mostrarei." (Gn 12,1)`], promises: [`"Farei de ti uma grande nação, e te abençoarei, e engrandecerei o teu nome; e tu serás uma bênção." (Gn 12,2-3).`, `"Darei à tua descendência esta terra." (Gn 12,7)`], principles: [`A fé exige obediência e a disposição para deixar a segurança do conhecido (cf. Gn 12,4).`, `A bênção de Deus sobre uma pessoa tem um propósito universal: abençoar todas as famílias da terra (cf. Gn 12,3).`] },
+                    { chapter: 13, title: "Abrão e Ló se Separam", orders: [`"Percorre esta terra no seu comprimento e na sua largura, porque eu a darei a ti." (Gn 13,17)`], promises: [`"Toda esta terra que vês, eu a darei a ti e à tua descendência para sempre." (Gn 13,15).`, `Farei a tua descendência como o pó da terra (cf. Gn 13,16).`], principles: [`A generosidade e a busca pela paz são características de quem anda com Deus (cf. Gn 13,8-9).`, `A escolha baseada apenas na aparência pode levar a lugares perigosos (Ló escolhe Sodoma) (cf. Gn 13,10-13).`] },
+                    { chapter: 14, title: "Abrão Resgata Ló", orders: [], promises: [`A bênção de Melquisedeque sobre Abrão (cf. Gn 14,19).`], principles: [`A lealdade familiar e a coragem para defender os seus (cf. Gn 14,14).`, `O dízimo é apresentado como um ato de reconhecimento da soberania de Deus (cf. Gn 14,20).`, `A recusa em enriquecer através dos bens de reis pagãos demonstra a confiança de Abrão em Deus como seu único provedor (cf. Gn 14,22-23).`] },
+                    { chapter: 15, title: "A Aliança de Deus com Abrão", orders: [], promises: [`"Não temas, Abrão, eu sou o teu escudo, e o teu galardão será muito grande." (Gn 15,1).`, `Um filho legítimo e uma descendência incontável como as estrelas (cf. Gn 15,4-5).`, `A posse da terra de Canaã (cf. Gn 15,18).`], principles: [`A fé é creditada como justiça (cf. Gn 15,6).`, `Deus estabelece suas alianças através de rituais solenes, comprometendo-se com suas promessas (cf. Gn 15,9-18).`] },
+                    { chapter: 16, title: "O Nascimento de Ismael", orders: [], promises: [`"Multiplicarei tanto a tua descendência, que não se poderá contar." (Gn 16,10).`], principles: [`A tentativa de "ajudar" a Deus com meios humanos, fora de Seu tempo e plano, gera conflito e dor (cf. Gn 16,1-4).`, `Deus é "El-Roí", o Deus que vê o sofrimento dos oprimidos e intervém (cf. Gn 16,13).`] },
+                    { chapter: 17, title: "O Sinal da Aliança", orders: [`"Anda na minha presença e sê perfeito." (Gn 17,1).`, `A circuncisão como sinal da aliança para Abraão e seus descendentes (cf. Gn 17,10-11).`], promises: [`Deus muda os nomes de Abrão para Abraão e Sarai para Sara (cf. Gn 17,5.15).`, `Sara dará à luz um filho, Isaque (cf. Gn 17,16.19).`], principles: [`A aliança com Deus envolve um sinal visível de pertencimento e compromisso (cf. Gn 17,11).`, `A dúvida e o riso humano não podem anular as promessas de um Deus Todo-Poderoso (cf. Gn 17,17).`] },
+                    { chapter: 18, title: "A Visita dos Três Anjos", orders: [], promises: [`"Daqui a um ano, voltarei a ti, e Sara, tua mulher, terá um filho." (Gn 18,10).`], principles: [`A hospitalidade para com os estrangeiros pode ser uma forma de acolher o próprio Deus (cf. Gn 18,1-8).`, `A intercessão pelos pecadores é agradável a Deus e demonstra um coração justo (cf. Gn 18,23-32).`] },
+                    { chapter: 19, title: "A Destruição de Sodoma", orders: [`"Escapa-te por tua vida; não olhes para trás de ti." (Gn 19,17)`], promises: [`A salvação de Ló e suas filhas por causa da intercessão de Abraão (cf. Gn 19,29).`], principles: [`O juízo de Deus sobre a perversão e a iniquidade é severo (cf. Gn 19,24-25).`, `A desobediência e o apego ao mundo de pecado resultam em destruição (a mulher de Ló) (cf. Gn 19,26).`] },
+                    { chapter: 20, title: "Abraão e Abimeleque", orders: [`"Restitui a mulher a seu marido, porque ele é profeta." (Gn 20,7)`], promises: [`Abraão orará por Abimeleque para que ele seja curado (cf. Gn 20,7.17).`], principles: [`Deus protege a honra de suas servas, mesmo quando seus maridos falham (cf. Gn 20,6).`, `A mentira, mesmo que "parcial", é perigosa e traz complicações (cf. Gn 20,2).`] },
+                    { chapter: 21, title: "O Nascimento de Isaque", orders: [`Implícita: Expulsar a escrava e seu filho para que o filho da escrava não seja herdeiro com o filho da livre (cf. Gn 21,10-12).`], promises: [`Deus cumpre sua promessa de dar um filho a Abraão e Sara na velhice (cf. Gn 21,1-2).`, `Do filho da escrava também farei uma nação (cf. Gn 21,13).`], principles: [`Deus é fiel para cumprir Suas promessas no tempo determinado (cf. Gn 21,2).`, `Deus ouve o clamor dos abandonados e provê para eles no deserto (cf. Gn 21,17-19).`] },
+                    { chapter: 22, title: "O Sacrifício de Isaque", orders: [`"Toma agora o teu filho, o teu único filho, Isaque, a quem amas, e oferece-o ali em holocausto." (Gn 22,2)`], promises: [`"Porquanto fizeste esta ação... que deveras te abençoarei, e grandissimamente multiplicarei a tua descendência... e em tua descendência serão benditas todas as nações da terra." (Gn 22,16-18)`], principles: [`A prova da fé pode exigir a entrega daquilo que mais amamos (cf. Gn 22,2).`, `A obediência radical a Deus desbloqueia as maiores bênçãos (cf. Gn 22,16-18).`, `Deus provê o cordeiro para o sacrifício; Ele é "Javé-Jireh" (O Senhor Proverá) (cf. Gn 22,14).`] },
+                    { chapter: 23, title: "A Morte de Sara", orders: [], promises: [], principles: [`O luto e o choro pela morte de um ente querido são legítimos (cf. Gn 23,2).`, `A compra da sepultura de Macpela estabelece o primeiro direito legal de posse da terra prometida para Abraão e sua descendência (cf. Gn 23,17-20).`] },
+                    { chapter: 24, title: "Uma Esposa para Isaque", orders: [`"Não tomarás para meu filho mulher das filhas dos cananeus." (Gn 24,3)`], promises: [`O anjo do Senhor irá à frente do servo para garantir o sucesso da missão (cf. Gn 24,7.40).`], principles: [`A importância de buscar uma esposa dentro do povo da aliança (cf. Gn 24,4).`, `A oração e a busca por sinais da direção de Deus são fundamentais nas decisões importantes (cf. Gn 24,12-14).`, `A generosidade e o espírito de serviço (de Rebeca) são indicativos de um bom caráter (cf. Gn 24,18-20).`] },
+                    { chapter: 25, title: "A Morte de Abraão", orders: [], promises: [`A promessa a Rebeca: "Duas nações há no teu ventre... um povo será mais forte do que o outro povo, e o maior servirá ao menor." (Gn 25,23).`], principles: [`A soberania de Deus na eleição, que não se baseia na ordem de nascimento ou mérito humano (cf. Gn 25,23).`, `A troca da primogenitura por um benefício material imediato revela um desprezo pelas coisas sagradas (cf. Gn 25,34).`] },
+                    { chapter: 26, title: "Isaque e Abimeleque", orders: [`"Não desças ao Egito; habita na terra que eu te disser." (Gn 26,2)`], promises: [`"Abençoar-te-ei, e multiplicarei a tua descendência por amor de Abraão, meu servo." (Gn 26,24).`, `Confirmação de todas as promessas feitas a Abraão (cf. Gn 26,3-4).`], principles: [`A bênção de Deus sobre os pais se estende aos filhos (cf. Gn 26,24).`, `A perseverança em não brigar, mas cavar um novo poço, leva a um lugar de paz e prosperidade (Reobote) (cf. Gn 26,19-22).`] },
+                    { chapter: 27, title: "Jacó Engana Isaque", orders: [], promises: [`A bênção patriarcal, uma vez proferida, era considerada irrevogável (cf. Gn 27,33).`], principles: [`O engano e a mentira, mesmo para alcançar uma promessa, geram conflito, ódio e separação na família (cf. Gn 27,41).`, `A preferência dos pais por um filho em detrimento do outro é uma fonte de discórdia (cf. Gn 25,28).`] },
+                    { chapter: 28, title: "A Escada de Jacó", orders: [`Implícita: Jacó é ordenado por seus pais a ir para Padã-Arã e tomar uma esposa de lá (cf. Gn 28,1-2).`], promises: [`"Eis que estou contigo, e te guardarei por onde quer que fores, e te farei tornar a esta terra; porque não te deixarei, até que haja cumprido o que te tenho dito." (Gn 28,15).`], principles: [`Deus se revela e confirma sua aliança em lugares inesperados (cf. Gn 28,16).`, `O encontro com Deus transforma um lugar comum em "casa de Deus" e "porta dos céus" (Betel) (cf. Gn 28,17).`] },
+                    { chapter: 29, title: "Jacó Casa-se com Lia e Raquel", orders: [], promises: [], principles: [`O enganador (Jacó) é enganado (por Labão), colhendo o que plantou (cf. Gn 29,25).`, `O amor e a afeição não podem ser forçados, e a falta deles causa grande sofrimento (o caso de Lia) (cf. Gn 29,31-32).`, `Deus vê a aflição dos desprezados e lhes concede honra (dando filhos a Lia) (cf. Gn 29,31).`] },
+                    { chapter: 30, title: "Os Filhos de Jacó", orders: [], promises: [], principles: [`A rivalidade e a inveja entre as esposas transformam a bênção dos filhos em uma competição (cf. Gn 30,1.8.15).`, `Deus age com providência para abençoar materialmente aqueles que lhe são fiéis, mesmo sob um chefe injusto (cf. Gn 30,27-43).`] },
+                    { chapter: 31, title: "Jacó Foge de Labão", orders: [`"Torna à terra de teus pais, e à tua parentela, e eu serei contigo." (Gn 31,3)`], promises: [`"Eu serei contigo." (Gn 31,3).`], principles: [`Deus protege seu servo da ira e da exploração de outros (cf. Gn 31,24.42).`, `A idolatria e o engano (Raquel com os ídolos) continuam a ser uma fonte de problemas e perigo (cf. Gn 31,19.34-35).`] },
+                    { chapter: 32, title: "Jacó Luta com Deus", orders: [], promises: [`"Não se chamará mais o teu nome Jacó, mas Israel; pois como príncipe lutaste com Deus e com os homens, e prevaleceste." (Gn 32,28)`], principles: [`O verdadeiro encontro com Deus muitas vezes envolve uma luta, uma crise de fé onde somos confrontados e transformados (cf. Gn 32,24).`, `Sair de uma luta com Deus pode nos deixar mancando (com uma fraqueza), mas também com uma nova identidade e uma bênção (cf. Gn 32,25.29).`] },
+                    { chapter: 33, title: "O Reencontro de Jacó e Esaú", orders: [], promises: [], principles: [`A humildade e a busca pela reconciliação podem apaziguar uma ira antiga (cf. Gn 33,3-4).`, `Ver o rosto de um irmão reconciliado é como ver a face de Deus (cf. Gn 33,10).`] },
+                    { chapter: 34, title: "A Desonra de Diná", orders: [], promises: [], principles: [`A curiosidade imprudente pode levar a situações perigosas e trágicas (cf. Gn 34,1).`, `A vingança desproporcional e enganosa, mesmo em nome da honra, é um pecado grave e traz má reputação (cf. Gn 34,13.25-30).`] },
+                    { chapter: 35, title: "Jacó em Betel", orders: [`"Levanta-te, sobe a Betel, e habita ali; e faze ali um altar ao Deus que te apareceu." (Gn 35,1)`], promises: [`A confirmação do nome Israel e da promessa da terra e de uma descendência de reis (cf. Gn 35,10-12).`], principles: [`A verdadeira adoração exige a purificação, a remoção dos ídolos e a mudança de vestes (símbolo de uma nova vida) (cf. Gn 35,2).`, `Voltar aos lugares de encontro com Deus (Betel) é importante para renovar a aliança e a consagração (cf. Gn 35,1).`] },
+                    { chapter: 36, title: "Os Descendentes de Esaú", orders: [], promises: [], principles: [`A Palavra de Deus registra o cumprimento da promessa de que Esaú também se tornaria uma nação (cf. Gn 36).`, `A separação física foi necessária porque a terra não podia sustentá-los juntos, mostrando a imensa bênção material de Deus sobre ambos (cf. Gn 36,6-7).`] },
+                    { chapter: 37, title: "José é Vendido por Seus Irmãos", orders: [], promises: [`Implícita nos sonhos de José, que prometem uma futura exaltação sobre sua família (cf. Gn 37,5-10).`], principles: [`O favoritismo dos pais gera inveja e ódio entre irmãos (cf. Gn 37,3-4).`, `A inveja pode levar a planos de assassinato e, finalmente, à desumanização (vender um irmão como escravo) (cf. Gn 37,18-28).`, `Deus pode usar os sonhos para revelar seus planos futuros (cf. Gn 37,5).`] },
+                    { chapter: 38, title: "Judá e Tamar", orders: [], promises: [], principles: [`A falha em cumprir com o dever familiar (o levirato) é vista como um grande mal (cf. Gn 38,8-10).`, `Deus age de maneiras misteriosas para garantir a continuidade da linhagem messiânica, mesmo através de situações moralmente complexas (cf. Gn 38).`] },
+                    { chapter: 39, title: "José no Egito", orders: [], promises: [], principles: [`A fidelidade a Deus e a integridade moral, mesmo sob tentação, são fundamentais (cf. Gn 39,7-9).`, `O Senhor estava com José, fazendo com que tudo o que ele fizesse prosperasse, mesmo na escravidão ou na prisão (cf. Gn 39,2-3, 21-23).`, `Fazer o que é certo pode, a curto prazo, levar a sofrimento e injustiça (José é preso) (cf. Gn 39,20).`] },
+                    { chapter: 40, title: "José Interpreta Sonhos na Prisão", orders: [], promises: [], principles: [`O dom de interpretar sonhos vem de Deus (cf. Gn 40,8).`, `A ingratidão humana pode nos fazer esquecer daqueles que nos ajudaram (o copeiro esquece José) (cf. Gn 40,23).`] },
+                    { chapter: 41, title: "José Diante do Faraó", orders: [`Implícita: A ordem do Faraó para que José governasse o Egito (cf. Gn 41,40-41).`], promises: [`Deus dará a Faraó uma resposta de paz (cf. Gn 41,16).`], principles: [`Deus eleva o humilhado e o fiel da prisão ao palácio no tempo certo (cf. Gn 41,14.41).`, `A sabedoria para planejar e administrar em tempos de abundância é um dom de Deus que salva vidas em tempos de escassez (cf. Gn 41,33-36).`] },
+                    { chapter: 42, title: "Os Irmãos de José no Egito", orders: [], promises: [], principles: [`As circunstâncias da vida podem nos levar a nos curvar diante daqueles que desprezamos, cumprindo os planos de Deus (cf. Gn 42,6).`, `O sofrimento pode despertar uma consciência culpada por pecados passados (cf. Gn 42,21).`] },
+                    { chapter: 43, title: "A Segunda Viagem ao Egito", orders: [], promises: [], principles: [`A verdadeira necessidade pode nos forçar a tomar decisões difíceis e a confiar em Deus com o resultado (cf. Gn 43,11-14).`, `Gestos de hospitalidade e paz podem começar a acalmar um coração medroso e culpado (cf. Gn 43,23-24).`] },
+                    { chapter: 44, title: "A Prova Final", orders: [], promises: [], principles: [`A verdadeira transformação do caráter é demonstrada pela disposição de se sacrificar pelo bem do outro (Judá por Benjamim) (cf. Gn 44,33-34).`, `O amor e a lealdade ao pai são postos à prova (cf. Gn 44,20-34).`] },
+                    { chapter: 45, title: "José se Revela", orders: [], promises: [`"Deus me enviou adiante de vós, para conservar vossa sucessão na terra, e para guardar-vos em vida por um grande livramento." (Gn 45,7)`], principles: [`A soberania de Deus usa as más intenções dos homens para realizar Seus bons propósitos de salvação (cf. Gn 45,5.8).`, `O perdão e a reconciliação são possíveis quando se enxerga a mão de Deus agindo em toda a história (cf. Gn 45,5).`] },
+                    { chapter: 46, title: "Jacó Vai para o Egito", orders: [], promises: [`"Não temas descer ao Egito, porque eu te farei ali uma grande nação. Eu descerei contigo ao Egito, e eu te farei tornar a subir, certamente." (Gn 46,3-4)`], principles: [`Deus confirma Sua presença e Suas promessas nos momentos de grande transição e incerteza (cf. Gn 46,1-4).`, `A família de Israel é preservada e reunida pela providência de Deus (cf. Gn 46,29-30).`] },
+                    { chapter: 47, title: "Os Hebreus em Gósen", orders: [], promises: [], principles: [`A bênção do homem de Deus (Jacó) tem valor mesmo diante do maior rei da terra (Faraó) (cf. Gn 47,7.10).`, `O povo de Deus cresce e se multiplica grandemente, mesmo em terra estrangeira (cf. Gn 47,27).`] },
+                    { chapter: 48, title: "Jacó Abençoa Efraim e Manassés", orders: [], promises: [], principles: [`A bênção profética pode subverter a ordem natural, colocando o menor antes do maior, segundo a vontade soberana de Deus (cf. Gn 48,17-19).`, `A adoção dos filhos de José por Jacó lhes garante uma herança igual entre as tribos de Israel (cf. Gn 48,5).`] },
+                    { chapter: 49, title: "As Profecias de Jacó", orders: [], promises: [`"O cetro não se arredará de Judá, nem o bastão de entre seus pés, até que venha Siló; e a ele se congregarão os povos." (Gn 49,10). Esta é uma promessa messiânica fundamental.`], principles: [`As ações passadas (boas e más) de uma pessoa têm consequências duradouras para seus descendentes (cf. Gn 49,4. 7 vs 8-12).`, `A bênção final de um patriarca revela o destino futuro de seus filhos, guiado pela mão de Deus. (cf. Gn 49).`] },
+                    { chapter: 50, title: "A Morte de José", orders: [`"Deus certamente vos visitará, e vos fará subir desta terra para a terra que jurou a Abraão, a Isaque e a Jacó." (Gn 50,24).`, `Levareis os meus ossos daqui (cf. Gn 50,25).`], promises: [`"Vós intentastes o mal contra mim; porém Deus o intentou para o bem, para fazer como se vê neste dia, para conservar muita gente em vida." (Gn 50,20)`], principles: [`A fé no cumprimento final das promessas de Deus, mesmo na hora da morte e em terra estrangeira (cf. Gn 50,24-25).`, `O perdão total reafirma que a soberania de Deus está acima da maldade humana para realizar o bem (cf. Gn 50,19-21).`] }
+                ],
+                characters: [
+                    { name: "Adão e Eva", summary: "Os primeiros seres humanos criados por Deus. Através de sua desobediência (a Queda), o pecado e a morte entraram no mundo. No entanto, Deus lhes fez a primeira promessa de um Redentor. Representam a origem da humanidade e a nossa necessidade fundamental de salvação." },
+                    { name: "Noé", summary: "Um homem justo que 'encontrou graça aos olhos do Senhor' em meio a uma geração corrupta. Por sua obediência, construiu a arca e foi salvo com sua família do Dilúvio. Com ele, Deus estabeleceu uma aliança perpétua com toda a criação, simbolizada pelo arco-íris." },
+                    { name: "Abraão", summary: "Conhecido como o 'Pai da Fé'. Foi chamado por Deus para deixar sua terra e sua parentela em troca da promessa de uma grande descendência e de uma terra. Sua fé foi testada de maneiras extraordinárias, culminando na disposição de sacrificar seu filho Isaque. É o patriarca fundador do povo de Israel." },
+                    { name: "Jacó (Israel)", summary: "Filho de Isaque e neto de Abraão. Seu nome foi mudado para Israel após lutar com um anjo. Teve doze filhos, que se tornaram os progenitores das doze tribos de Israel. Sua vida é uma jornada de engano e luta, mas também de transformação e encontro com a graça de Deus." },
+                    { name: "José", summary: "Filho preferido de Jacó, vendido como escravo por seus irmãos invejosos. Através da providência divina, ele ascendeu de prisioneiro a governador do Egito. Sua sabedoria e fidelidade a Deus permitiram que ele salvasse não apenas o Egito, mas também sua própria família da fome, demonstrando o poder de Deus de transformar o mal em bem." }
+                ]
+            },
+            'joao': {
+                name: 'Evangelho de São João',
+                summary: `O Evangelho de São João, atribuído ao "discípulo a quem Jesus amava", oferece uma perspectiva única e teologicamente profunda sobre a vida e o ministério de Jesus. Diferente dos Evangelhos Sinóticos (Mateus, Marcos e Lucas), João não se concentra tanto na cronologia dos eventos, mas em revelar a identidade divina de Cristo como o Logos (o Verbo) de Deus que se fez carne. O livro é estruturado em torno de sete "sinais" milagrosos, que manifestam a glória de Jesus, e sete discursos "Eu sou", nos quais Jesus revela sua natureza e missão. A narrativa culmina na Paixão, Morte e Ressurreição, apresentadas como a exaltação e a glorificação do Filho, o momento supremo da revelação do amor de Deus pelo mundo. João convida seus leitores a uma relação de fé pessoal e profunda com Jesus para que, "crendo, tenhais a vida em seu nome" (Jo 20,31).`,
+                homily: `<h3>Homilia: João - Encontrar a Vida no Verbo Encarnado</h3><div class="space-y-4 text-stone-700"><p>Queridos irmãos e irmãs,</p><p>O Evangelho de São João nos convida a subir a um lugar mais alto, a contemplar o mistério de Cristo de uma perspectiva celestial. Desde as primeiras palavras, "No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus", somos elevados para além do tempo e do espaço, para o coração da Trindade. Este evangelho é um convite a um encontro pessoal e transformador com Jesus, a Palavra viva de Deus.</p><p>João nos mostra que a fé não é apenas aceitar um conjunto de doutrinas, mas responder a uma pessoa. Jesus nos faz um chamado radical, uma <strong class="text-red-700">ORDEM</strong> que define nossa identidade: "Permanecei em mim, e eu permanecerei em vós" (Jo 15,4). Esta não é uma ordem para fazer algo, mas para "ser" algo: um ramo unido à videira verdadeira. Toda a nossa vida, nossa fecundidade, nossa alegria, depende desta união vital com Ele.</p><p>E qual é a <strong class="text-green-700">PROMESSA</strong> que sustenta esta permanência? É a mais sublime de todas: a vida eterna. Para João, a vida eterna não é apenas algo que receberemos no futuro; ela começa agora. "Quem crê no Filho tem a vida eterna" (Jo 3,36). É uma qualidade de vida, uma participação na própria vida de Deus, que recebemos através da fé em Jesus, o pão vivo que desceu do céu. Ele promete também o Espírito Santo, o Paráclito, que nos guiará a toda a verdade e nos recordará tudo o que Ele nos ensinou.</p><p>O grande <strong class="text-blue-700">PRINCÍPIO</strong> que fundamenta todo o Evangelho de João é o da Encarnação. "E o Verbo se fez carne e habitou entre nós" (Jo 1,14). Deus não se revelou através de uma ideia ou de uma filosofia, mas em uma pessoa histórica e concreta. Este princípio da sacramentalidade permeia todo o evangelho: a água do batismo, o pão da Eucaristia, o lava-pés que revela a essência do serviço. Deus usa realidades visíveis para nos comunicar graças invisíveis. O divino e o humano se encontram em Jesus, e através d'Ele, o mundo material se torna um lugar de encontro com Deus.</p><p>Ao ler o Evangelho de João, somos desafiados a responder à pergunta que Jesus fez a seus discípulos: "E vós, quem dizeis que eu sou?". Que, pela graça do Espírito Santo, possamos responder com fé e amor, como Tomé: "Meu Senhor e meu Deus!". E que, crendo, possamos encontrar Nele a verdadeira vida, abundante e eterna. Amém.</p></div>`,
+                chapters: [
+                    { chapter: 1, title: "O Prólogo e as Primeiras Testemunhas", orders: [`"Vinde e vede" (Jo 1,39).`], promises: [`Aos que o receberam, deu-lhes o poder de se tornarem filhos de Deus (cf. Jo 1,12).`, `Ver o céu aberto e os anjos de Deus subindo e descendo sobre o Filho do Homem (cf. Jo 1,51).`], principles: [`Jesus é o Verbo eterno de Deus, que se fez carne e habitou entre nós (cf. Jo 1,1.14).`, `João Batista veio para dar testemunho da luz (cf. Jo 1,7-8).`, `Jesus é o Cordeiro de Deus que tira o pecado do mundo (cf. Jo 1,29).`] },
+                    { chapter: 2, title: "As Bodas de Caná e a Purificação do Templo", orders: [`"Enchei as talhas de água" (Jo 2,7).`, `Implícita: "Fazei tudo o que ele vos disser" (Jo 2,5).`], promises: [`A manifestação da glória de Jesus, que leva os discípulos a crerem nele (cf. Jo 2,11).`], principles: [`A intercessão de Maria pode iniciar a manifestação do poder de Cristo (cf. Jo 2,3-5).`, `O corpo de Jesus é o novo Templo, que será destruído e reerguido em três dias (cf. Jo 2,19-21).`] },
+                    { chapter: 3, title: "O Diálogo com Nicodemos", orders: [`"Importa-vos nascer de novo" (Jo 3,7).`], promises: [`"Todo aquele que nele crê não pereça, mas tenha a vida eterna" (Jo 3,16).`], principles: [`A necessidade do novo nascimento pela água e pelo Espírito para entrar no Reino de Deus (cf. Jo 3,5).`, `"Deus amou o mundo de tal maneira que deu o seu Filho unigênito" (Jo 3,16).`, `A luz veio ao mundo, mas os homens amaram mais as trevas, porque as suas obras eram más (cf. Jo 3,19).`] },
+                    { chapter: 4, title: "A Mulher Samaritana", orders: [`Implícita: Adorar o Pai em espírito e em verdade (cf. Jo 4,23-24).`], promises: [`"Aquele que beber da água que eu lhe der nunca terá sede, mas a água que eu lhe der se fará nele uma fonte de água a jorrar para a vida eterna" (Jo 4,14).`], principles: [`A verdadeira adoração transcende lugares físicos e se centra na sinceridade do coração (cf. Jo 4,21-24).`, `O alimento de Jesus é fazer a vontade do Pai e realizar a sua obra (cf. Jo 4,34).`, `A salvação, embora venha dos judeus, é oferecida a todos (cf. Jo 4,22).`] },
+                    { chapter: 5, title: "A Cura do Paralítico em Betesda", orders: [`"Toma o teu leito e anda" (Jo 5,8).`], promises: [`"Quem ouve a minha palavra e crê naquele que me enviou tem a vida eterna, e não entra em juízo, mas passou da morte para a vida" (Jo 5,24).`], principles: [`Jesus tem autoridade igual à do Pai para dar vida e julgar (cf. Jo 5,21-22).`, `As Escrituras dão testemunho de Cristo (cf. Jo 5,39).`, `O Filho só pode fazer o que vê o Pai fazer (cf. Jo 5,19).`] },
+                    { chapter: 6, title: "A Multiplicação dos Pães e o Discurso do Pão da Vida", orders: [`"Trabalhai, não pela comida que perece, mas pela comida que permanece para a vida eterna" (Jo 6,27).`, `Implícita: Crer naquele que Deus enviou (cf. Jo 6,29).`], promises: [`"Eu sou o pão da vida; aquele que vem a mim não terá fome, e quem crê em mim nunca terá sede" (Jo 6,35).`, `"Quem come a minha carne e bebe o meu sangue tem a vida eterna, e eu o ressuscitarei no último dia" (Jo 6,54).`], principles: [`Jesus é o Pão Vivo que desceu do céu (cf. Jo 6,51).`, `A Eucaristia (comer a carne e beber o sangue de Jesus) é essencial para ter vida em nós (cf. Jo 6,53).`, `As palavras de Jesus são espírito e vida (cf. Jo 6,63).`] },
+                    { chapter: 7, title: "Jesus na Festa dos Tabernáculos", orders: [`"Se alguém tem sede, venha a mim e beba" (Jo 7,37).`], promises: [`"Quem crê em mim, como diz a Escritura, rios de água viva correrão do seu ventre" (Jo 7,38). (Referindo-se ao Espírito Santo).`], principles: [`O mundo odeia Jesus porque ele testifica que as suas obras são más (cf. Jo 7,7).`, `O ensinamento de Jesus não é dele mesmo, mas daquele que o enviou (cf. Jo 7,16).`] },
+                    { chapter: 8, title: "A Mulher Adúltera e a Luz do Mundo", orders: [`"Vai e não peques mais" (Jo 8,11).`], promises: [`"Eu sou a luz do mundo; quem me segue não andará em trevas, mas terá a luz da vida" (Jo 8,12).`, `"Se permanecerdes na minha palavra, verdadeiramente sereis meus discípulos; e conhecereis a verdade, e a verdade vos libertará" (Jo 8,31-32).`], principles: [`Aquele que está sem pecado que atire a primeira pedra (cf. Jo 8,7).`, `O pecado leva à escravidão, mas o Filho pode libertar (cf. Jo 8,34-36).`, `"Antes que Abraão existisse, EU SOU" (Jo 8,58), uma clara afirmação de divindade.`] },
+                    { chapter: 9, title: "A Cura do Cego de Nascença", orders: [`"Vai, lava-te no tanque de Siloé" (Jo 9,7).`], promises: [`Implícita: Crer no Filho do Homem para receber a visão espiritual (cf. Jo 9,35-38).`], principles: [`O sofrimento nem sempre é resultado de um pecado específico, mas pode ser uma oportunidade para que as obras de Deus se manifestem (cf. Jo 9,3).`, `Jesus veio a este mundo para um juízo: para que os que não veem vejam, e os que veem se tornem cegos (cegueira espiritual) (cf. Jo 9,39).`] },
+                    { chapter: 10, title: "O Bom Pastor", orders: [`Implícita: Entrar pela porta (Jesus) e ouvir a voz do pastor.`], promises: [`"Eu vim para que tenham vida, e a tenham com abundância" (Jo 10,10).`, `"As minhas ovelhas ouvem a minha voz... e eu lhes dou a vida eterna, e nunca hão de perecer, e ninguém as arrebatará da minha mão" (Jo 10,27-28).`], principles: [`Jesus é a porta das ovelhas (cf. Jo 10,7).`, `Jesus é o Bom Pastor que dá a vida por suas ovelhas (cf. Jo 10,11).`, `"Eu e o Pai somos um" (Jo 10,30), outra afirmação explícita de sua divindade.`] },
+                    { chapter: 11, title: "A Ressurreição de Lázaro", orders: [`"Tirai a pedra" (Jo 11,39).`, `"Lázaro, vem para fora" (Jo 11,43).`], promises: [`"Eu sou a ressurreição e a vida; quem crê em mim, ainda que esteja morto, viverá" (Jo 11,25).`], principles: [`Jesus se comove profundamente com o sofrimento humano (cf. Jo 11,35).`, `A ressurreição de Lázaro é o maior dos "sinais", prefigurando a própria ressurreição de Cristo e a nossa.`, `A fé em Cristo vence a morte (cf. Jo 11,26).`] },
+                    { chapter: 12, title: "A Unção em Betânia e a Entrada Triunfal", orders: [], promises: [`"E eu, quando for levantado da terra, atrairei todos a mim" (Jo 12,32).`], principles: [`O amor extravagante por Jesus (Maria de Betânia) contrasta com a ganância e a traição (Judas) (cf. Jo 12,3-6).`, `Se o grão de trigo não morrer, fica só; mas se morrer, dá muito fruto (cf. Jo 12,24).`, `Quem ama a sua vida, a perderá; mas quem odeia a sua vida neste mundo, a guardará para a vida eterna (cf. Jo 12,25).`] },
+                    { chapter: 13, title: "O Lava-pés e o Novo Mandamento", orders: [`"Se eu, Senhor e Mestre, vos lavei os pés, vós deveis também lavar os pés uns aos outros" (Jo 13,14).`, `"Um novo mandamento vos dou: Que vos ameis uns aos outros; como eu vos amei a vós, que também vós uns aos outros vos ameis" (Jo 13,34).`], promises: [`"Nisto todos conhecerão que sois meus discípulos, se vos amardes uns aos outros" (Jo 13,35).`], principles: [`A verdadeira grandeza no Reino de Deus se manifesta no serviço humilde (cf. Jo 13,14-15).`, `O amor fraterno é a marca distintiva do discípulo de Cristo (cf. Jo 13,35).`] },
+                    { chapter: 14, title: "O Caminho para o Pai e a Promessa do Espírito", orders: [`"Não se turbe o vosso coração; credes em Deus, crede também em mim" (Jo 14,1).`], promises: [`"Na casa de meu Pai há muitas moradas... vou preparar-vos lugar" (Jo 14,2).`, `"E eu rogarei ao Pai, e ele vos dará outro Paráclito, para que fique convosco para sempre" (Jo 14,16).`, `"Aquele que me ama será amado de meu Pai, e eu o amarei, e me manifestarei a ele" (Jo 14,21).`], principles: [`"Eu sou o caminho, e a verdade, e a vida; ninguém vem ao Pai, senão por mim" (Jo 14,6).`, `Quem vê a Jesus, vê o Pai (cf. Jo 14,9).`] },
+                    { chapter: 15, title: "A Videira e os Ramos", orders: [`"Permanecei em mim, e eu em vós" (Jo 15,4).`, `"Este é o meu mandamento: que vos ameis uns aos outros, assim como eu vos amei" (Jo 15,12).`], promises: [`"Se permanecerdes em mim, e as minhas palavras em vós, pedireis tudo o que quiserdes, e vos será feito" (Jo 15,7).`, `"Já não vos chamo servos... mas tenho-vos chamado amigos" (Jo 15,15).`], principles: [`Jesus é a videira verdadeira e nós somos os ramos; sem Ele, nada podemos fazer (cf. Jo 15,1.5).`, `A prova do amor é dar a vida pelos amigos (cf. Jo 15,13).`, `O mundo odiará os discípulos porque eles não pertencem ao mundo (cf. Jo 15,18-19).`] },
+                    { chapter: 16, title: "A Obra do Espírito Santo e a Volta de Jesus", orders: [], promises: [`"Quando vier o Paráclito... Ele dará testemunho de mim" (Jo 15,26).`, `"Quando ele vier, o Espírito da verdade, ele vos guiará a toda a verdade" (Jo 16,13).`, `"A vossa tristeza se converterá em alegria" (Jo 16,20).`, `"Pedi, e recebereis, para que a vossa alegria seja completa" (Jo 16,24).`], principles: [`O Espírito Santo convencerá o mundo do pecado, da justiça e do juízo (cf. Jo 16,8).`, `A alegria da ressurreição será permanente e ninguém poderá tirá-la (cf. Jo 16,22).`] },
+                    { chapter: 17, title: "A Oração Sacerdotal de Jesus", orders: [`Implícita na oração: a busca pela unidade.`], promises: [`"E a vida eterna é esta: que te conheçam a ti, o único Deus verdadeiro, e a Jesus Cristo, a quem enviaste" (Jo 17,3).`], principles: [`Jesus ora pela sua glorificação, que é o cumprimento de sua missão (cf. Jo 17,1).`, `Jesus ora pela proteção e santificação de seus discípulos (cf. Jo 17,11.17).`, `Jesus ora pela unidade de todos os futuros crentes, "para que o mundo creia que tu me enviaste" (cf. Jo 17,20-21).`] },
+                    { chapter: 18, title: "A Prisão e o Julgamento de Jesus", orders: [], promises: [], principles: [`Jesus se entrega voluntariamente, demonstrando controle total sobre a situação (cf. Jo 18,4-8).`, `"O meu reino não é deste mundo" (Jo 18,36).`, `A pergunta cínica de Pilatos, "Que é a verdade?", contrasta com Jesus, que é a própria Verdade (cf. Jo 18,38).`] },
+                    { chapter: 19, title: "A Crucificação e a Morte de Jesus", orders: [`"Mulher, eis aí o teu filho... Eis aí a tua mãe" (Jo 19,26-27).`], promises: [`Implícita na entrega do espírito: o cumprimento da missão.`], principles: [`A crucifixão é a entronização do Rei ("Jesus Nazareno, o Rei dos Judeus") (cf. Jo 19,19).`, `Da cruz, Jesus nos dá Maria como nossa mãe (cf. Jo 19,26-27).`, `Do lado de Jesus, aberto pela lança, jorram sangue e água, símbolos dos sacramentos do Batismo e da Eucaristia, o nascimento da Igreja (cf. Jo 19,34).`] },
+                    { chapter: 20, title: "A Ressurreição", orders: [`"Recebei o Espírito Santo. A quem perdoardes os pecados, ser-lhes-ão perdoados; a quem os retiverdes, ser-lhes-ão retidos" (Jo 20,22-23).`], promises: [`"Bem-aventurados os que não viram e creram" (Jo 20,29).`], principles: [`A ressurreição é um evento real, testemunhado pelos discípulos (cf. Jo 20).`, `A fé não exige ver para crer, mas crer para ver a glória de Deus (cf. Jo 20,29).`, `Jesus ressuscitado dá à Igreja o poder de perdoar os pecados (cf. Jo 20,23).`] },
+                    { chapter: 21, title: "O Epílogo: A Aparição na Galileia", orders: [`"Apascenta as minhas ovelhas" (Jo 21,17).`, `"Segue-me" (Jo 21,19).`], promises: [`Implícita: A restauração de Pedro e a confirmação de sua missão.`], principles: [`Jesus ressuscitado continua a cuidar e a prover para seus discípulos (a pesca milagrosa) (cf. Jo 21,6).`, `O amor por Jesus é o pré-requisito para o pastoreio do seu rebanho (cf. Jo 21,15-17).`, `O discipulado envolve seguir a Jesus até o fim, cada um com seu chamado particular (cf. Jo 21,22).`] }
+                ],
+                characters: [
+                    { name: "Jesus", summary: "O personagem central, apresentado como o Verbo Divino que se fez carne. Ele é a Luz do Mundo, o Pão da Vida, o Bom Pastor, a Ressurreição e a Vida, e o Caminho, a Verdade e a Vida. Sua missão é revelar o Pai e oferecer a vida eterna a todos que nele creem." },
+                    { name: "João Batista", summary: "O precursor, a voz que clama no deserto. Sua missão é dar testemunho de Jesus, identificando-o como o 'Cordeiro de Deus'. Ele compreende que sua importância deve diminuir para que a de Cristo cresça." },
+                    { name: "Pedro", summary: "Um dos discípulos mais proeminentes. Apesar de sua negação, ele é amorosamente restaurado por Jesus após a ressurreição e recebe a missão de 'apascentar as ovelhas', confirmando seu papel de liderança na Igreja primitiva." },
+                    { name: "O Discípulo Amado", summary: "Tradicionalmente identificado como o próprio autor, São João. Ele representa o modelo de discípulo ideal: está aos pés da cruz com Maria, é o primeiro a crer na ressurreição ao ver o túmulo vazio e reconhece o Senhor ressuscitado na margem do lago. Sua relação com Jesus é marcada pela intimidade e percepção espiritual." },
+                    { name: "Maria Madalena", summary: "Uma seguidora fiel de Jesus. Ela é a primeira testemunha da ressurreição, recebendo a missão de anunciar aos outros discípulos que o Senhor está vivo. É chamada de 'apóstola dos apóstolos'." }
+                ]
+            },
+            'atos': {
+                name: 'Atos dos Apóstolos',
+                summary: `O livro de Atos dos Apóstolos, escrito por São Lucas como continuação de seu Evangelho, é a crônica inspirada do nascimento e da expansão da Igreja Cristã primitiva. A narrativa começa com a Ascensão de Nosso Senhor Jesus Cristo e a promessa do Espírito Santo, e se desenrola ao longo de aproximadamente três décadas, culminando com a chegada do Apóstolo Paulo a Roma, o centro do mundo conhecido na época. É o livro da ação do Espírito Santo, o grande protagonista que impulsiona, guia e fortalece os apóstolos e discípulos em sua missão de testemunhar o Evangelho "até os confins da terra" (At 1,8). Do ponto de vista do dogma Católico, o livro de Atos é um pilar para a Eclesiologia (a doutrina sobre a Igreja). Nele, vemos a estrutura hierárquica da Igreja nascente, com a primazia de São Pedro claramente manifestada, a sucessão apostólica, a importância dos sacramentos e a presença orante da Virgem Maria.`,
+                homily: `<h3>Homilia: Viver Atos Hoje - Deixar-se Mover pelo Espírito</h3>
+                        <div class="space-y-4 text-stone-700">
+                            <p>Irmãos e irmãs em Cristo,</p>
+                            <p>Hoje, a Palavra de Deus nos convida a abrir o livro de Atos dos Apóstolos. Mas não podemos abri-lo como quem lê um simples relato histórico. Atos é um livro vivo, um espelho e um manual para a Igreja de todos os tempos. A história que ali se conta é a nossa história. A missão que ali começa é a nossa missão. A força que tudo move, o Espírito Santo, é a mesma que recebemos em nosso Batismo.</p>
+                            <p>A pergunta que ecoa desde as primeiras comunidades até nós, hoje, é: como podemos ser testemunhas eficazes de Cristo ressuscitado em um mundo que tantas vezes parece dar as costas para Deus? A resposta, queridos irmãos, está em nos deixarmos conduzir pela mesma força: o Espírito Santo. A promessa de Jesus não foi limitada àquele tempo: "Recebereis a força do Espírito Santo... e sereis minhas testemunhas". Esta promessa é para cada um de nós!</p>
+                            <p>Que ao meditarmos sobre este livro sagrado, o fogo do Espírito Santo se reacenda em nossos corações. Que tenhamos a ousadia de Pedro para anunciar, a sabedoria de Paulo para argumentar, e a fé inabalável da Virgem Maria, a Rainha dos Apóstolos. Que Deus nos dê a graça de não sermos apenas leitores, mas protagonistas dos Atos dos Apóstolos hoje. Amém.</p>
+                        </div>`,
+                chapters: [
+                    { chapter: 1, title: "A Promessa do Pai e a Ascensão", orders: [`"Não vos afasteis de Jerusalém, mas esperai a promessa do Pai" (At 1,4).`, `"Sereis minhas testemunhas em Jerusalém, em toda a Judeia e a Samaria, e até os confins da terra" (At 1,8).`], promises: [`"Sereis batizados com o Espírito Santo" (At 1,5).`, `A volta de Jesus da mesma forma como subiu ao céu (cf. At 1,11).`], principles: [`A necessidade da oração perseverante em comunidade (cf. At 1,14).`, `A importância da sucessão apostólica para a manutenção da unidade e da missão da Igreja (cf. At 1,21-26).`] },
+                    { chapter: 2, title: "Pentecostes, a Vinda do Espírito Santo", orders: [`"Arrependei-vos, e cada um de vós seja batizado em nome de Jesus Cristo para remissão dos vossos pecados" (At 2,38).`], promises: [`"Recebereis o dom do Espírito Santo" (At 2,38).`, `"A promessa é para vós, para vossos filhos e para todos os que estão longe, para todos quantos o Senhor nosso Deus chamar" (At 2,39).`], principles: [`A centralidade da pregação apostólica (Kerigma) (cf. At 2,14-36).`, `A vida em comunidade baseada na doutrina dos apóstolos, na comunhão fraterna, na fração do pão e nas orações (cf. At 2,42).`, `A partilha dos bens como expressão concreta do amor fraterno (cf. At 2,44-45).`] },
+                    { chapter: 3, title: "A Cura do Coxo e o Discurso de Pedro", orders: [`"Arrependei-vos, pois, e convertei-vos, para que sejam apagados os vossos pecados" (At 3,19).`], promises: [`Tempos de refrigério da parte do Senhor e o envio de Jesus, o Cristo (cf. At 3,20).`, `A bênção de Deus através da descendência de Abraão (cf. At 3,25).`], principles: [`O poder de cura age em nome de Jesus Cristo (cf. At 3,6).`, `A importância de dar glória a Deus pelos milagres realizados (cf. At 3,8).`, `A continuidade da revelação de Deus através dos profetas (cf. At 3,21-24).`] },
+                    { chapter: 4, title: "A Prisão de Pedro e João e a Oração da Comunidade", orders: [`A necessidade de obedecer a Deus antes que aos homens (cf. At 4,19).`], promises: [`A ousadia para anunciar a Palavra de Deus em resposta à oração (cf. At 4,29-31).`], principles: [`A unidade da comunidade cristã em um só coração e uma só alma (cf. At 4,32).`, `O desapego material e a partilha dos bens como testemunho de fé (cf. At 4,32-35).`, `A ressurreição de Cristo como fundamento da pregação apostólica (cf. At 4,33).`] },
+                    { chapter: 5, title: "Ananias e Safira e a Perseguição", orders: [`A advertência contra a mentira ao Espírito Santo (cf. At 5,3-4.9).`, `"Ide e apresentai-vos no templo e anunciai ao povo todas estas palavras de vida" (At 5,20).`], promises: [`O testemunho do Espírito Santo para aqueles que obedecem a Deus (cf. At 5,32).`], principles: [`A seriedade do pecado e suas consequências na comunidade (cf. At 5,5.10).`, `A autoridade e o poder dos apóstolos para realizar sinais e prodígios (cf. At 5,12).`, `A alegria em sofrer por causa do nome de Jesus (cf. At 5,41).`] },
+                    { chapter: 6, title: "A Instituição dos Sete Diáconos", orders: [`"Escolhei dentre vós sete homens de boa reputação, cheios do Espírito e de sabedoria, aos quais encarregaremos deste serviço" (At 6,3).`], promises: [`O crescimento da Palavra de Deus e a multiplicação do número de discípulos (cf. At 6,7).`], principles: [`A importância do serviço (diaconia) na Igreja para atender às necessidades da comunidade (cf. At 6,1-2).`, `A prioridade da oração e do ministério da palavra para os apóstolos (cf. At 6,4).`, `A necessidade de homens cheios de fé e do Espírito Santo para o serviço na Igreja (cf. At 6,5).`] },
+                    { chapter: 7, title: "O Discurso e o Martírio de Estêvão", orders: [`A exortação implícita a não resistir ao Espírito Santo (cf. At 7,51).`], promises: [`A visão da glória de Deus e de Jesus à sua direita para os fiéis até a morte (cf. At 7,55-56).`], principles: [`A fidelidade a Deus mesmo diante da perseguição e da morte (martírio) (cf. At 7,59-60).`, `O perdão aos inimigos como imitação de Cristo (cf. At 7,60).`, `A história da salvação como preparação para a vinda de Cristo (cf. At 7,2-53).`] },
+                    { chapter: 8, title: "A Perseguição em Jerusalém e a Evangelização da Samaria", orders: [`Filipe recebe a ordem de ir para o caminho de Gaza e de se aproximar do carro do eunuco (cf. At 8,26.29).`], promises: [`A alegria como fruto da pregação do Evangelho (cf. At 8,8).`, `A recepção do Espírito Santo através da imposição das mãos dos apóstolos (cf. At 8,17).`], principles: [`A perseguição como meio de dispersão e consequente expansão do Evangelho (cf. At 8,1.4).`, `A necessidade do Batismo para a salvação (cf. At 8,12.36-38).`, `A importância da reta intenção no coração para receber os dons de Deus (cf. At 8,21-22).`] },
+                    { chapter: 9, title: "A Conversão de Saulo", orders: [`"Levanta-te, entra na cidade, e aí te será dito o que deves fazer" (At 9,6).`, `"Vai, porque este homem é para mim um instrumento escolhido para levar o meu nome diante das nações, dos reis e dos filhos de Israel" (At 9,15).`], promises: [`A eleição divina para uma missão específica, mesmo para um antigo perseguidor (cf. At 9,15-16).`, `A cura da cegueira e o recebimento do Espírito Santo (cf. At 9,17-18).`], principles: [`O poder transformador da graça de Deus na vida de uma pessoa (cf. At 9,1-19).`, `A importância da comunidade cristã no acolhimento e na formação dos novos convertidos (cf. At 9,19.26-27).`, `A ousadia na pregação de Cristo após a conversão (cf. At 9,20.27).`] },
+                    { chapter: 10, title: "A Visão de Pedro e a Conversão de Cornélio", orders: [`"Mata e come" (At 10,13).`, `"Não chames tu de impuro ao que Deus purificou" (At 10,15).`, `"Vai com eles, sem hesitar, porque sou eu que os enviei" (At 10,20).`], promises: [`A salvação para todos os que temem a Deus e praticam a justiça, independentemente da nação (cf. At 10,34-35).`, `O derramamento do Espírito Santo também sobre os gentios (cf. At 10,44-45).`], principles: [`A universalidade da salvação em Cristo (catolicidade da Igreja) (cf. At 10,34-43).`, `A revelação progressiva de Deus à sua Igreja (cf. At 10,9-16).`, `A importância da obediência à voz de Deus, mesmo quando contraria as tradições humanas (cf. At 10,19-20).`] },
+                    { chapter: 11, title: "Pedro se Justifica em Jerusalém e a Igreja em Antioquia", orders: [`A exortação de Barnabé para que permanecessem fiéis ao Senhor com firmeza de coração (cf. At 11,23).`], promises: [`O crescimento da Igreja e a conversão de uma grande multidão ao Senhor (cf. At 11,21.24).`], principles: [`A necessidade de dar razão da própria fé e das próprias ações à comunidade (cf. At 11,2-18).`, `A importância do encorajamento e da formação na vida cristã (cf. At 11,23.26).`, `A solidariedade entre as comunidades cristãs (cf. At 11,29-30).`] },
+                    { chapter: 12, title: "A Prisão e a Libertação de Pedro", orders: [`"Cinge-te e calça as tuas sandálias... Cobre-te com a tua capa e segue-me" (At 12,8).`], promises: [`A libertação miraculosa da prisão em resposta à oração incessante da Igreja (cf. At 12,5.7-11).`], principles: [`O poder da oração comunitária (cf. At 12,5).`, `A intervenção angélica na vida dos fiéis (cf. At 12,7).`, `O orgulho precede a queda e a justiça divina (cf. At 12,21-23).`] },
+                    { chapter: 13, title: "A Primeira Viagem Missionária", orders: [`"Separai-me Barnabé e Saulo para a obra a que os tenho destinado" (At 13,2).`, `"Era a vós que em primeiro lugar se devia anunciar a palavra de Deus; mas, visto que a rejeitais e não vos julgais dignos da vida eterna, eis que nos voltamos para os gentios" (At 13,46).`], promises: [`"Eu te constituí luz das nações, para que sejas a minha salvação até os confins da terra" (At 13,47).`, `A alegria e a glorificação da Palavra do Senhor entre os gentios (cf. At 13,48).`], principles: [`A iniciativa do Espírito Santo na missão da Igreja (cf. At 13,2).`, `A prioridade da evangelização aos judeus, mas a abertura universal aos gentios (cf. At 13,46-47).`, `A pregação centrada em Jesus, sua morte e ressurreição, como cumprimento das Escrituras (cf. At 13,23-41).`] },
+                    { chapter: 14, title: "Fim da Primeira Viagem", orders: [`A exortação a permanecerem firmes na fé e a consciência de que "é através de muitas tribulações que nos importa entrar no Reino de Deus" (At 14,22).`], promises: [`A confirmação da palavra da graça de Deus através de sinais e prodígios (cf. At 14,3).`], principles: [`A perseguição como uma constante na vida missionária (cf. At 14,5.19).`, `A humildade em não aceitar honras que são devidas somente a Deus (cf. At 14,14-15).`, `A necessidade de estabelecer presbíteros em cada igreja para o cuidado pastoral da comunidade (cf. At 14,23).`] },
+                    { chapter: 15, title: "O Concílio de Jerusalém", orders: [`"Pareceu bem ao Espírito Santo e a nós não vos impor outro peso, além destas coisas necessárias: que vos abstenhais das carnes imoladas aos ídolos, do sangue, da carne sufocada e da fornicação" (At 15,28-29).`], promises: [`A salvação pela graça do Senhor Jesus, tanto para os judeus como para os gentios (cf. At 15,11).`], principles: [`A autoridade da Igreja reunida em concílio (com Pedro e os apóstolos) para dirimir questões de fé e doutrina (cf. At 15,6-29).`, `A unidade da Igreja preservada através do diálogo e da busca da vontade de Deus (cf. At 15,25).`, `A importância de não perturbar os convertidos com fardos desnecessários (cf. At 15,19).`] },
+                    { chapter: 16, title: "A Segunda Viagem Missionária: Filipos", orders: [`A visão de Paulo com o apelo: "Passa à Macedônia e ajuda-nos!" (At 16,9).`], promises: [`"Crê no Senhor Jesus e serás salvo, tu e a tua casa" (At 16,31).`], principles: [`A docilidade à guia do Espírito Santo, que abre e fecha portas (cf. At 16,6-7).`, `A importância da hospitalidade e do acolhimento aos missionários (cf. At 16,15).`, `O testemunho de fé e a alegria mesmo na prisão e no sofrimento (cf. At 16,23-25).`] },
+                    { chapter: 17, title: "Tessalônica, Bereia e Atenas", orders: [`O anúncio de Deus de que "agora notifica aos homens que todos em toda parte se arrependam" (At 17,30).`], promises: [`Deus "não está longe de cada um de nós" (At 17,27).`], principles: [`A inculturação do Evangelho, utilizando a cultura local para anunciar a Cristo (cf. At 17,22-28).`, `A nobreza de examinar as Escrituras para verificar a veracidade da pregação (cf. At 17,11).`, `A ressurreição como ponto central e, por vezes, controverso da fé cristã (cf. At 17,31-32).`] },
+                    { chapter: 18, title: "Corinto e o Fim da Segunda Viagem", orders: [`"Não temas, mas fala e não te cales, porquanto eu estou contigo e ninguém te porá a mão para te fazer mal" (At 18,9-10).`], promises: [`"Eu tenho muito povo nesta cidade" (At 18,10).`], principles: [`A importância do trabalho manual para o sustento do missionário (cf. At 18,3).`, `A necessidade de formação catequética aprofundada para os fiéis (cf. At 18,24-26).`, `A fidelidade à missão apesar da oposição (cf. At 18,6).`] },
+                    { chapter: 19, title: "Éfeso e a Terceira Viagem Missionária", orders: [`A necessidade do Batismo em nome de Jesus para receber o Espírito Santo (cf. At 19,4-5).`], promises: [`O poder de Deus manifestado através de milagres extraordinários (cf. At 19,11-12).`], principles: [`O combate espiritual contra as forças do mal e as práticas de magia (cf. At 19,13-19).`, `A Palavra do Senhor crescia e se fortalecia poderosamente (cf. At 19,20).`, `A necessidade de renúncia a tudo o que é incompatível com a fé cristã (cf. At 19,19).`] },
+                    { chapter: 20, title: "Viagem à Macedônia e Discurso de Despedida", orders: [`"Cuidai de vós mesmos e de todo o rebanho sobre o qual o Espírito Santo vos constituiu bispos, para pastoreardes a Igreja de Deus" (At 20,28).`, `"Vigiai" (At 20,31).`, `"É preciso socorrer os fracos" (At 20,35).`], promises: [`"Há mais felicidade em dar do que em receber" (At 20,35).`], principles: [`A responsabilidade pastoral dos líderes da Igreja (cf. At 20,28).`, `A advertência contra os falsos mestres que surgirão de dentro da própria comunidade (cf. At 20,29-30).`, `O exemplo de trabalho e dedicação do apóstolo (cf. At 20,33-35).`] },
+                    { chapter: 21, title: "A Viagem a Jerusalém e a Prisão de Paulo", orders: [`A submissão à vontade do Senhor, mesmo diante do sofrimento previsto: "Faça-se a vontade do Senhor!" (At 21,14).`], promises: [`A presença de Deus mesmo nos momentos de maior provação (implícita na coragem de Paulo).`], principles: [`A prontidão para sofrer e morrer por amor a Cristo (cf. At 21,13).`, `O respeito pelas tradições locais, quando não ferem a essência da fé, em vista da paz e da evangelização (cf. At 21,20-24).`, `A fúria cega do fanatismo religioso (cf. At 21,27-31).`] },
+                    { chapter: 22, title: "O Discurso de Paulo ao Povo", orders: [`"Apressa-te e sai logo de Jerusalém, porque não receberão o teu testemunho a meu respeito" (At 22,18).`, `"Vai, porque eu te enviarei para longe, aos gentios" (At 22,21).`], promises: [`A purificação dos pecados através do Batismo, invocando o nome do Senhor (cf. At 22,16).`], principles: [`O valor do testemunho pessoal da própria conversão (cf. At 22,3-21).`, `A utilização dos direitos de cidadania para a defesa da justiça e da própria vida (cf. At 22,25-29).`, `A incompreensão e a rejeição da mensagem de salvação universal (cf. At 22,22).`] },
+                    { chapter: 23, title: "Paulo Perante o Sinédrio", orders: [`"Coragem! Pois assim como deste testemunho de mim em Jerusalém, importa que também o dês em Roma" (At 23,11).`], promises: [`A proteção e o encorajamento do Senhor em meio às conspirações e perigos (cf. At 23,11).`], principles: [`A providência divina que frustra os planos dos inimigos (cf. At 23,12-35).`, `A astúcia a serviço da verdade e da própria defesa (cf. At 23,6).`, `A divisão entre os adversários pode ser uma oportunidade para o anúncio da verdade (cf. At 23,7-9).`] },
+                    { chapter: 24, title: "O Processo Diante de Félix", orders: [`A manutenção de uma "consciência irrepreensível diante de Deus e dos homens" (At 24,16).`], promises: [`A esperança na ressurreição dos mortos, tanto dos justos como dos injustos (cf. At 24,15).`], principles: [`A busca da justiça e da verdade, mesmo diante de autoridades corruptas (cf. At 24,24-26).`, `A paciência e a perseverança na espera pelo cumprimento da justiça de Deus (cf. At 24,27).`, `A pregação sobre a fé em Cristo Jesus, a justiça, a temperança e o juízo vindouro (cf. At 24,24-25).`] },
+                    { chapter: 25, title: "Paulo Apela para César", orders: [`A decisão de apelar para a autoridade máxima em busca de um julgamento justo (cf. At 25,11).`], promises: [`O cumprimento do desígnio de Deus de que Paulo testemunhasse em Roma (cf. At 23,11).`], principles: [`A inocência do cristão diante das acusações infundadas (cf. At 25,7-8).`, `A questão central da fé cristã é a afirmação de que "um certo Jesus, já morto, Paulo afirmava estar vivo" (cf. At 25,19).`, `A soberania de Deus que conduz a história para a realização de seus planos (cf. At 25,12).`] },
+                    { chapter: 26, title: "A Defesa de Paulo Diante de Agripa", orders: [`A missão recebida de Cristo: "abrir-lhes os olhos, para que se convertam das trevas à luz e do poder de Satanás a Deus, a fim de que recebam a remissão dos pecados e a herança entre os que são santificados pela fé em mim" (At 26,18).`], promises: [`A libertação do povo e dos gentios para a missão (cf. At 26,17).`, `A remissão dos pecados e a herança entre os santos (cf. At 26,18).`], principles: [`A coerência entre a vida e a pregação, baseada na obediência à visão celestial (cf. At 26,19).`, `A esperança na promessa feita por Deus aos pais como centro da fé (cf. At 26,6-7).`, `A pregação do sofrimento e da ressurreição de Cristo como luz para todos os povos (cf. At 26,23).`] },
+                    { chapter: 27, title: "A Viagem para Roma e o Naufrágio", orders: [`"Exorto-vos a que tenhais bom ânimo, porque nenhuma vida se perderá de entre vós, mas somente o navio" (At 27,22).`, `"É preciso que comais alguma coisa, por causa da vossa saúde" (At 27,34).`], promises: [`"Não temas, Paulo, importa que compareças perante César, e eis que Deus te deu todos os que navegam contigo" (At 27,24).`, `A salvação de todas as vidas a bordo (cf. At 27,22.34.44).`], principles: [`A confiança em Deus em meio às tempestades da vida (cf. At 27,25).`, `A importância da liderança e do encorajamento em momentos de crise (cf. At 27,21-26.33-36).`, `A ação de graças a Deus pelo alimento, mesmo na adversidade (cf. At 27,35).`] },
+                    { chapter: 28, title: "Malta e a Chegada a Roma", orders: [`Implícita na ação de Paulo de acolher a todos e pregar o Reino de Deus (cf. At 28,30-31).`], promises: [`A proteção divina contra o perigo (a víbora) (cf. At 28,3-6).`, `O poder de cura em nome de Jesus (cf. At 28,8-9).`], principles: [`A hospitalidade e a bondade para com os estrangeiros (cf. At 28,2.7).`, `A perseverança na missão até o fim, sem impedimentos (cf. At 28,31).`, `A Palavra de Deus não está acorrentada, mesmo que o missionário esteja preso (cf. At 28,30-31).`] }
+                ],
+                characters: [
+                    { name: "Pedro", summary: "O líder dos apóstolos, cuja primazia é evidente desde o início. Ele prega o primeiro sermão de Pentecostes, realiza curas milagrosas, recebe a visão que abre a Igreja aos gentios (caso de Cornélio) e preside o Concílio de Jerusalém. Pedro é a 'rocha' sobre a qual a Igreja primitiva é edificada." },
+                    { name: "Paulo (Saulo)", summary: "Inicialmente um perseguidor ferrenho da Igreja, sua dramática conversão na estrada para Damasco o transforma no 'Apóstolo dos Gentios'. Suas viagens missionárias levam o Evangelho por todo o Império Romano, e suas epístolas formam uma parte crucial da teologia do Novo Testamento." },
+                    { name: "Estêvão", summary: "Um dos sete diáconos escolhidos para servir a comunidade. É descrito como um homem 'cheio de fé e do Espírito Santo'. Seu poderoso discurso recapitulando a história de Israel e sua fidelidade até a morte o tornam o primeiro mártir cristão (protomártir), um testemunho supremo de fé em Cristo." },
+                    { name: "Filipe", summary: "Outro dos sete diáconos, conhecido como 'o Evangelista'. Ele é fundamental na expansão do Evangelho para além de Jerusalém, pregando em Samaria e, mais notavelmente, evangelizando e batizando o eunuco etíope, um evento crucial que mostra a universalidade da mensagem cristã." }
+                ]
+            },
+            '1joao': {
+                name: '1ª Carta de São João',
+                summary: `A Primeira Carta de São João é um profundo tratado teológico e pastoral escrito pelo 'discípulo amado'. Diferente de outras cartas, não segue uma estrutura formal, mas aborda temas cruciais para uma comunidade que enfrentava os primeiros desafios doutrinários, especialmente o gnosticismo, que negava a encarnação de Cristo. João escreve com a autoridade de uma testemunha ocular para fortalecer a fé dos fiéis, oferecendo-lhes critérios para discernir a verdade da mentira. Os temas centrais são a comunhão com Deus, que é Luz, e a vida cristã como um 'caminhar na luz'. Ele estabelece testes práticos da fé verdadeira: a confissão de Jesus Cristo vindo na carne, a obediência aos mandamentos de Deus e, acima de tudo, a prática do amor fraterno. A carta é um chamado à certeza e à alegria, assegurando aos crentes que eles têm a vida eterna e que o amor de Deus, manifestado em Cristo, vence o mundo.`,
+                homily: `<h3>Homilia: 1ª João - Caminhando na Luz do Amor</h3><div class="space-y-4 text-stone-700"><p>Meus caros irmãos e irmãs,</p><p>A Primeira Carta de São João nos leva ao coração pulsante da nossa fé. João, a testemunha ocular do Verbo feito carne, não nos escreve para apresentar novidades, mas para nos recordar o essencial, aquilo que "era desde o princípio". Em um tempo de confusão, onde falsos mestres negavam que Jesus tinha um corpo real, João ergue sua voz com autoridade e ternura para nos dar certeza.</p><p>Ele nos apresenta duas verdades absolutas: "Deus é luz" e "Deus é amor". Não são apenas qualidades de Deus; são a Sua própria essência. A partir disso, tudo o mais se desenrola. Se Deus é luz, nossa vida deve ser um caminhar na luz. Isso exige a primeira <strong class="text-red-700">ORDEM</strong> fundamental: romper com as trevas do pecado e confessar nossas falhas. Não para sermos humilhados, mas para experimentarmos a gloriosa <strong class="text-green-700">PROMESSA</strong> de que "o sangue de Jesus, seu Filho, nos purifica de todo pecado". A confissão sincera nos abre à misericórdia que cura.</p><p>Se Deus é amor, a <strong class="text-red-700">ORDEM</strong> que define o cristão é "amar-nos uns aos outros". Para João, este não é um sentimento vago, mas um mandamento concreto. É impossível dizer que amamos a Deus, a quem não vemos, se odiamos nosso irmão, a quem vemos. O amor fraterno é o teste decisivo, a prova visível da nossa comunhão invisível com Deus. E a <strong class="text-green-700">PROMESSA</strong> que acompanha este mandamento é extraordinária: "se nos amamos uns aos outros, Deus permanece em nós, e o seu amor é em nós aperfeiçoado". O amor vivido torna Deus presente no mundo.</p><p>O grande <strong class="text-blue-700">PRINCÍPIO</strong> que permeia toda a carta é a Encarnação. A fé cristã se firma sobre esta realidade: o Filho de Deus veio na carne, se tornou um de nós. Negar isso é o espírito do anticristo. Crer nisso é ter comunhão com o Pai e o Filho. Este princípio nos salva de uma fé desencarnada, de uma espiritualidade que foge do mundo. Nossa fé é concreta, vivida na obediência aos mandamentos e no serviço aos irmãos.</p><p>Portanto, hoje, a Palavra nos convida a fazer um exame de consciência. Estamos caminhando na luz ou nas trevas? Nossa fé se traduz em amor concreto? Cremos firmemente que Jesus Cristo é o Filho de Deus que veio em carne para nos salvar? Se a resposta for sim, diz São João, podemos ter a certeza da vida eterna. Que esta alegria e esta certeza inundem nossos corações e nos impulsionem a viver como verdadeiros filhos da luz e do amor. Amém.</p></div>`,
+                chapters: [
+                    { chapter: 1, title: "O Verbo da Vida e o Caminhar na Luz", orders: [`Implícita: Andar na luz (1,7).`, `Confessar nossos pecados (1,9).`], promises: [`Temos comunhão uns com os outros e o sangue de Jesus nos purifica (1,7).`, `Ele é fiel e justo para nos perdoar os pecados e nos purificar de toda iniquidade (1,9).`], principles: [`Deus é luz, e nele não há trevas (1,5).`, `A comunhão com Deus exige uma vida coerente com Sua natureza (caminhar na luz) (1,6-7).`, `A negação do pecado é autoengano e torna Deus mentiroso (1,8.10).`] },
+                    { chapter: 2, title: "Cristo, nosso Advogado, e o Mandamento do Amor", orders: [`"Não pequeis" (2,1).`, `Guardar os seus mandamentos (2,3).`, `"Não ameis o mundo nem as coisas que há no mundo" (2,15).`, `"Permanecei nele" (2,28).`], promises: [`"Temos um Advogado junto ao Pai, Jesus Cristo, o Justo" (2,1).`, `"Conhecemos que o conhecemos: se guardamos os seus mandamentos" (2,3).`, `Aquele que faz a vontade de Deus permanece para sempre (2,17).`], principles: [`O conhecimento de Deus se prova pela obediência (2,3-4).`, `O amor ao irmão é a evidência de que se está na luz (2,9-11).`, `A concupiscência da carne, dos olhos e a soberba da vida não procedem do Pai (2,16).`] },
+                    { chapter: 3, title: "Filhos de Deus e o Amor Fraterno", orders: [`"Não amemos de palavra, nem de língua, mas por obra e em verdade" (3,18).`], promises: [`"Seremos semelhantes a ele, porque o veremos como ele é" (3,2).`, `"Alcançamos dele tudo o que pedimos, porque guardamos os seus mandamentos" (3,22).`], principles: [`Somos chamados filhos de Deus (3,1).`, `Quem comete o pecado é do diabo, mas o Filho de Deus se manifestou para destruir as obras do diabo (3,8).`, `A diferença entre os filhos de Deus e os filhos do diabo é a prática da justiça e o amor ao irmão (3,10).`] },
+                    { chapter: 4, title: "Provar os Espíritos e a Essência de Deus como Amor", orders: [`"Provai os espíritos, se procedem de Deus" (4,1).`, `"Amemo-nos uns aos outros, porque o amor vem de Deus" (4,7).`], promises: [`"Nisto conhecereis o Espírito de Deus: todo espírito que confessa que Jesus Cristo veio em carne é de Deus" (4,2).`, `"Se nos amamos uns aos outros, Deus permanece em nós, e o seu amor é em nós aperfeiçoado" (4,12).`], principles: [`Deus é amor (4,8.16).`, `O critério para discernir os espíritos é a confissão da encarnação de Cristo (4,2-3).`, `Não fomos nós que amamos a Deus, mas foi ele que nos amou e enviou seu Filho como propiciação pelos nossos pecados (4,10).`] },
+                    { chapter: 5, title: "A Fé que Vence o Mundo e a Certeza da Vida Eterna", orders: [`Crer que Jesus é o Cristo (5,1).`, `Guardar os seus mandamentos (5,2).`], promises: [`"Todo o que crê que Jesus é o Cristo, é nascido de Deus" (5,1).`, `"Esta é a vitória que vence o mundo: a nossa fé" (5,4).`, `"Esta é a confiança que temos nele: que, se pedirmos alguma coisa, segundo a sua vontade, ele nos ouve" (5,14).`, `"Aquele que tem o Filho, tem a vida" (5,12).`], principles: [`O amor a Deus se expressa na obediência aos seus mandamentos, que não são pesados (5,3).`, `Há três que dão testemunho: o Espírito, a água e o sangue; e os três são unânimes (5,7-8).`, `Sabemos que somos de Deus e que o mundo inteiro jaz no Maligno (5,19).`] }
+                ],
+                characters: [
+                    { name: "O Apóstolo João", summary: "Autor da carta, conhecido como o 'discípulo amado'. Ele escreve como uma testemunha ocular da vida de Jesus, com autoridade apostólica e profunda preocupação pastoral por sua comunidade. Seu objetivo é combater falsos ensinamentos e dar aos fiéis a certeza da comunhão com Deus e da vida eterna." },
+                    { name: "Jesus Cristo (O Filho)", summary: "A figura central da carta. Ele é apresentado como o Verbo da vida, que existia desde o princípio, veio em carne (Encarnação), é nosso Advogado junto ao Pai e a propiciação pelos nossos pecados. A fé Nele é o caminho para a filiação divina e a vitória sobre o mundo." },
+                    { name: "Os Anticristos", summary: "São os falsos mestres que saíram da comunidade. Eles negam que Jesus Cristo veio em carne, enganam os fiéis e representam o 'espírito do erro'. João exorta a comunidade a discernir e rejeitar seus ensinamentos, permanecendo na verdade que receberam desde o início." }
+                ]
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const views = document.querySelectorAll('.view');
+            const navButtons = document.querySelectorAll('.nav-button');
+            const ordinationSelect = document.getElementById('ordinationSelect');
+            const bookSelect = document.getElementById('bookSelect');
+            const chapterBookSelect = document.getElementById('chapterBookSelect');
+            const chapterSelect = document.getElementById('chapterSelect');
+            const charBookSelect = document.getElementById('charBookSelect');
+            const characterSelect = document.getElementById('characterSelect');
+            const analysisFilterSelect = document.getElementById('analysisFilterSelect');
+            const bookContent = document.getElementById('bookContent');
+            const chapterContent = document.getElementById('chapterContent');
+            const characterContent = document.getElementById('characterContent');
+            
+            let themesChartInstance = null;
+            let currentSpeech = null;
+
+            // Define sorting orders
+            const ORDER_AVE_MARIA = ['genesis', 'joao', 'atos', '1joao'];
+            const ORDER_JONAS_ABIB = ['1joao', 'joao', 'atos', 'genesis'];
+
+            // State for Book Marathon
+            let bookMarathonState = {
+                isPlaying: false,
+                isPaused: false,
+                currentBookIndex: 0,
+                rate: 1,
+                utterance: null,
+            };
+
+            // State for Chapter Marathon
+            let chapterMarathonState = {
+                isPlaying: false,
+                isPaused: false,
+                currentChapterIndex: 0,
+                rate: 1,
+                utterance: null,
+            };
+
+            // State for Character Marathon
+            let charMarathonState = {
+                isPlaying: false,
+                isPaused: false,
+                currentCharacterIndex: 0,
+                rate: 1,
+                utterance: null,
+            };
+            
+            const appState = {
+                currentView: 'visaoGeral',
+                ordination: 'aveMaria', // 'aveMaria' or 'jonasAbib'
+                selectedBook: 'genesis',
+                selectedChapterBook: 'genesis',
+                selectedChapter: 1,
+                selectedCharBook: 'genesis',
+                selectedCharacter: null,
+                analysisFilter: 'geral'
+            };
+
+            function getCurrentBookOrder() {
+                return appState.ordination === 'jonasAbib' ? ORDER_JONAS_ABIB : ORDER_AVE_MARIA;
+            }
+
+            function init() {
+                // Set initial book based on default order
+                appState.selectedBook = getCurrentBookOrder()[0];
+                appState.selectedChapterBook = getCurrentBookOrder()[0];
+                appState.selectedCharBook = getCurrentBookOrder()[0];
+
+                populateAllBookSelects();
+                populateAnalysisFilter();
+                updateAllContent();
+                render();
+
+                // Setup individual audio players
+                setupAudioHandler('Book', {
+                    playBtnId: 'playAudioBtnBook', pauseBtnId: 'pauseAudioBtnBook', resumeBtnId: 'resumeAudioBtnBook', stopBtnId: 'stopAudioBtnBook', statusId: 'audioStatusBook', speedBtnClass: 'speed-btn-book',
+                    textGenerator: () => generateBookAudioText(appState.selectedBook)
+                });
+                setupAudioHandler('Chapter', {
+                    playBtnId: 'playAudioBtnChapter', pauseBtnId: 'pauseAudioBtnChapter', resumeBtnId: 'resumeAudioBtnChapter', stopBtnId: 'stopAudioBtnChapter', statusId: 'audioStatusChapter', speedBtnClass: 'speed-btn-chapter',
+                    textGenerator: () => generateChapterAudioText(appState.selectedChapterBook, appState.selectedChapter)
+                });
+                 setupAudioHandler('Char', {
+                    playBtnId: 'playAudioBtnChar', pauseBtnId: 'pauseAudioBtnChar', resumeBtnId: 'resumeAudioBtnChar', stopBtnId: 'stopAudioBtnChar', statusId: 'audioStatusChar', speedBtnClass: 'speed-btn-char',
+                    textGenerator: () => generateCharacterAudioText(appState.selectedCharBook, appState.selectedCharacter)
+                });
+
+                // Setup marathon audio players
+                setupBookMarathonAudioHandler();
+                setupChapterMarathonAudioHandler();
+                setupCharMarathonAudioHandler();
+            }
+            
+            function populateBookSelect(selector, selectedValue) {
+                const currentOrder = getCurrentBookOrder();
+                selector.innerHTML = '';
+                currentOrder.forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = bibleData[key].name;
+                    selector.appendChild(option);
+                });
+                selector.value = selectedValue;
+            }
+
+            function populateAllBookSelects() {
+                populateBookSelect(bookSelect, appState.selectedBook);
+                populateBookSelect(chapterBookSelect, appState.selectedChapterBook);
+                populateBookSelect(charBookSelect, appState.selectedCharBook);
+            }
+            
+            function populateAnalysisFilter() {
+                const currentOrder = getCurrentBookOrder();
+                analysisFilterSelect.innerHTML = '<option value="geral">Geral (Todos os Livros)</option>';
+                currentOrder.forEach(key => {
+                     const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = bibleData[key].name;
+                    analysisFilterSelect.appendChild(option);
+                });
+            }
+            
+            function populateChapterSelect(bookKey) {
+                chapterSelect.innerHTML = '';
+                const book = bibleData[bookKey];
+                book.chapters.forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter.chapter;
+                    option.textContent = `Capítulo ${chapter.chapter}: ${chapter.title}`;
+                    chapterSelect.appendChild(option);
+                });
+                chapterSelect.value = appState.selectedChapter;
+            }
+
+            function populateCharacterSelect(bookKey) {
+                characterSelect.innerHTML = '<option value="">-- Escolha --</option>';
+                const book = bibleData[bookKey];
+                if(book.characters && book.characters.length > 0) {
+                    book.characters.forEach(char => {
+                        const option = document.createElement('option');
+                        option.value = char.name;
+                        option.textContent = char.name;
+                        characterSelect.appendChild(option);
+                    });
+                } else {
+                     characterSelect.innerHTML = '<option value="">Sem personagens</option>';
+                }
+            }
+
+            function renderBookSummary(bookKey) {
+                const book = bibleData[bookKey];
+                let contentHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-amber-900 mb-4">Resumo Geral do Livro de ${book.name}</h3>
+                        <div class="space-y-4 text-stone-700"><p>${book.summary}</p></div>
+                    </div>
+                    <div>
+                        ${book.homily}
+                    </div>
+                `;
+                bookContent.innerHTML = contentHTML;
+                if (!bookMarathonState.isPlaying) {
+                    resetAudioState('Book');
+                }
+            }
+
+            function renderChapter(bookKey, chapterNumber) {
+                const chapterData = bibleData[bookKey].chapters.find(c => c.chapter == chapterNumber);
+                if (!chapterData) {
+                    chapterContent.innerHTML = '<p>Selecione um capítulo.</p>';
+                    return;
+                };
+
+                let contentHTML = `<h3 class="text-2xl font-bold text-amber-900 mb-2">${bibleData[bookKey].name} - Capítulo ${chapterData.chapter}: ${chapterData.title}</h3><div class="space-y-6 mt-4">`;
+
+                if (chapterData.orders && chapterData.orders.length > 0) {
+                    contentHTML += `<div><h4 class="text-xl font-semibold text-red-800 mb-2 border-b-2 border-red-200 pb-1">Ordens</h4><ul class="list-disc list-inside space-y-2 text-red-700">`;
+                    chapterData.orders.forEach(item => contentHTML += `<li>${item}</li>`);
+                    contentHTML += `</ul></div>`;
+                }
+
+                if (chapterData.promises && chapterData.promises.length > 0) {
+                    contentHTML += `<div><h4 class="text-xl font-semibold text-green-800 mb-2 border-b-2 border-green-200 pb-1">Promessas</h4><ul class="list-disc list-inside space-y-2 text-green-700">`;
+                    chapterData.promises.forEach(item => contentHTML += `<li>${item}</li>`);
+                    contentHTML += `</ul></div>`;
+                }
+
+                if (chapterData.principles && chapterData.principles.length > 0) {
+                    contentHTML += `<div><h4 class="text-xl font-semibold text-blue-800 mb-2 border-b-2 border-blue-200 pb-1">Princípios</h4><ul class="list-disc list-inside space-y-2 text-blue-700">`;
+                    chapterData.principles.forEach(item => contentHTML += `<li>${item}</li>`);
+                    contentHTML += `</ul></div>`;
+                }
+                
+                contentHTML += `</div>`;
+                chapterContent.innerHTML = contentHTML;
+                 if (!chapterMarathonState.isPlaying) {
+                    resetAudioState('Chapter');
+                }
+            }
+
+            function renderCharacter(bookKey, charName) {
+                if(!charName) {
+                    characterContent.innerHTML = '<p class="text-center text-stone-500">Selecione um livro e um personagem para ver um resumo sobre ele.</p>';
+                    if (!charMarathonState.isPlaying) {
+                        resetAudioState('Char');
+                    }
+                    return;
+                }
+                const characterData = bibleData[bookKey].characters.find(c => c.name === charName);
+                if (!characterData) return;
+                
+                let contentHTML = `
+                    <h3 class="text-2xl font-bold text-amber-900 mb-4 text-center">${characterData.name}</h3>
+                    <p class="text-stone-700 text-lg">${characterData.summary}</p>
+                `;
+                characterContent.innerHTML = contentHTML;
+
+                if (!charMarathonState.isPlaying) {
+                    resetAudioState('Char');
+                }
+            }
+
+            function renderThemesChart(filterKey) {
+                const ctx = document.getElementById('themesChart').getContext('2d');
+                if (themesChartInstance) {
+                    themesChartInstance.destroy();
+                }
+
+                const totals = { orders: 0, promises: 0, principles: 0 };
+                let chartTitle = 'Ocorrências por Categoria';
+
+                const booksToAnalyze = (filterKey === 'geral') 
+                    ? Object.values(bibleData) 
+                    : [bibleData[filterKey]];
+                
+                const bookNames = (filterKey === 'geral')
+                    ? 'Geral (Todos os Livros)'
+                    : bibleData[filterKey].name;
+                
+                chartTitle = `${chartTitle} (${bookNames})`;
+
+                booksToAnalyze.forEach(book => {
+                    book.chapters.forEach(chapter => {
+                        totals.orders += (chapter.orders || []).length;
+                        totals.promises += (chapter.promises || []).length;
+                        totals.principles += (chapter.principles || []).length;
+                    });
+                });
+
+                themesChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ordens', 'Promessas', 'Princípios'],
+                        datasets: [{
+                            label: 'Contagem Total de Temas',
+                            data: [totals.orders, totals.promises, totals.principles],
+                            backgroundColor: ['rgba(199, 58, 58, 0.6)','rgba(22, 163, 74, 0.6)','rgba(37, 99, 235, 0.6)'],
+                            borderColor: ['rgba(199, 58, 58, 1)','rgba(22, 163, 74, 1)','rgba(37, 99, 235, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } },
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: chartTitle, font: { size: 16 } }
+                        }
+                    }
+                });
+            }
+
+            function generateBookAudioText(bookKey) {
+                const book = bibleData[bookKey];
+                const principalCharacters = book.characters.map(c => c.name).join(', ');
+                const cleanHomily = book.homily.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+                return `Bem-vindo ao nosso podcast de estudo bíblico. Hoje, vamos mergulhar no livro de ${book.name}. ${book.summary}. Neste livro, encontramos figuras marcantes como ${principalCharacters}. A seguir, uma breve reflexão sobre seus ensinamentos: ${cleanHomily}`;
+            }
+             
+            function generateChapterAudioText(bookKey, chapterNumber) {
+                const book = bibleData[bookKey];
+                const chapter = book.chapters.find(c => c.chapter == chapterNumber);
+                if (!chapter) return "";
+
+                let text = `Resumo do livro de ${book.name}, capítulo ${chapter.chapter}: ${chapter.title}. `;
+                
+                if (chapter.orders && chapter.orders.length > 0) {
+                    text += "As ordens neste capítulo são: " + chapter.orders.map(o => o.split('(')[0].trim()).join('. ') + ". ";
+                }
+                if (chapter.promises && chapter.promises.length > 0) {
+                     text += "As promessas são: " + chapter.promises.map(p => p.split('(')[0].trim()).join('. ') + ". ";
+                }
+                if (chapter.principles && chapter.principles.length > 0) {
+                     text += "E os princípios eternos que aprendemos são: " + chapter.principles.map(p => p.split('(')[0].trim()).join('. ') + ".";
+                }
+                return text;
+            }
+
+            function generateCharacterAudioText(bookKey, charName) {
+                if(!charName) return "";
+                const characterData = bibleData[bookKey].characters.find(c => c.name === charName);
+                if (!characterData) return "";
+                return `Um resumo sobre ${characterData.name}: ${characterData.summary}`;
+            }
+
+            function updateAudioButtons(type, isPlaying, isPaused = false) {
+                const playBtn = document.getElementById(`playAudioBtn${type}`);
+                const pauseBtn = document.getElementById(`pauseAudioBtn${type}`);
+                const resumeBtn = document.getElementById(`resumeAudioBtn${type}`);
+                const stopBtn = document.getElementById(`stopAudioBtn${type}`);
+                
+                if(playBtn) playBtn.classList.toggle('hidden', isPlaying || isPaused);
+                if(pauseBtn) pauseBtn.classList.toggle('hidden', !isPlaying || isPaused);
+                if(resumeBtn) resumeBtn.classList.toggle('hidden', !isPaused);
+                if(stopBtn) stopBtn.classList.toggle('hidden', !isPlaying && !isPaused);
+            }
+
+            function resetAudioState(type) {
+                if ( (type.includes('Marathon')) || (currentSpeech && !bookMarathonState.isPlaying && !chapterMarathonState.isPlaying && !charMarathonState.isPlaying) ) {
+                     speechSynthesis.cancel();
+                }
+                
+                if (type === 'BookMarathon') {
+                    bookMarathonState.isPlaying = false;
+                    bookMarathonState.isPaused = false;
+                    bookMarathonState.currentBookIndex = 0;
+                    bookMarathonState.utterance = null;
+                }
+                if (type === 'Marathon') {
+                    chapterMarathonState.isPlaying = false;
+                    chapterMarathonState.isPaused = false;
+                    chapterMarathonState.currentChapterIndex = 0;
+                    chapterMarathonState.utterance = null;
+                }
+                 if (type === 'CharMarathon') {
+                    charMarathonState.isPlaying = false;
+                    charMarathonState.isPaused = false;
+                    charMarathonState.currentCharacterIndex = 0;
+                    charMarathonState.utterance = null;
+                }
+                
+                updateAudioButtons(type, false);
+                const statusEl = document.getElementById(`audioStatus${type}`);
+                if(statusEl) statusEl.textContent = "";
+            }
+
+            // Handler for Book Marathon Player
+            function setupBookMarathonAudioHandler() {
+                const playBtn = document.getElementById('playAudioBtnBookMarathon');
+                const pauseBtn = document.getElementById('pauseAudioBtnBookMarathon');
+                const resumeBtn = document.getElementById('resumeAudioBtnBookMarathon');
+                const stopBtn = document.getElementById('stopAudioBtnBookMarathon');
+                const statusEl = document.getElementById('audioStatusBookMarathon');
+                const speedBtns = document.querySelectorAll('.speed-btn-book-marathon');
+
+                function playNextBook() {
+                    const currentOrder = getCurrentBookOrder();
+                    if (bookMarathonState.currentBookIndex >= currentOrder.length) {
+                        resetAudioState('BookMarathon');
+                        statusEl.textContent = "Maratona de livros concluída!";
+                        return;
+                    }
+
+                    const bookKey = currentOrder[bookMarathonState.currentBookIndex];
+                    appState.selectedBook = bookKey;
+                    bookSelect.value = bookKey;
+                    renderBookSummary(bookKey);
+                    
+                    const textToSpeak = generateBookAudioText(bookKey);
+                    bookMarathonState.utterance = new SpeechSynthesisUtterance(textToSpeak);
+                    bookMarathonState.utterance.lang = 'pt-BR';
+                    bookMarathonState.utterance.rate = bookMarathonState.rate;
+
+                    bookMarathonState.utterance.onstart = () => {
+                        bookMarathonState.isPlaying = true;
+                        bookMarathonState.isPaused = false;
+                        updateAudioButtons('BookMarathon', true, false);
+                        statusEl.textContent = `Reproduzindo: ${bibleData[bookKey].name}...`;
+                    };
+
+                    bookMarathonState.utterance.onend = () => {
+                        bookMarathonState.currentBookIndex++;
+                        playNextBook();
+                    };
+
+                    speechSynthesis.speak(bookMarathonState.utterance);
+                }
+
+                playBtn.addEventListener('click', () => {
+                    if (speechSynthesis.speaking) speechSynthesis.cancel();
+                    
+                    bookMarathonState.isPlaying = true;
+                    bookMarathonState.currentBookIndex = 0; 
+                    playNextBook();
+                });
+
+                pauseBtn.addEventListener('click', () => {
+                    if (speechSynthesis.speaking) {
+                        speechSynthesis.pause();
+                        bookMarathonState.isPaused = true;
+                        updateAudioButtons('BookMarathon', true, true);
+                        statusEl.textContent = "Maratona pausada.";
+                    }
+                });
+
+                resumeBtn.addEventListener('click', () => {
+                    if (speechSynthesis.paused) {
+                        speechSynthesis.resume();
+                        bookMarathonState.isPaused = false;
+                        updateAudioButtons('BookMarathon', true, false);
+                        statusEl.textContent = `Reproduzindo: ${bibleData[appState.selectedBook].name}...`;
+                    }
+                });
+
+                stopBtn.addEventListener('click', () => {
+                    resetAudioState('BookMarathon');
+                });
+
+                speedBtns.forEach(button => {
+                    button.addEventListener('click', () => {
+                        bookMarathonState.rate = parseFloat(button.dataset.speed);
+                        speedBtns.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        if (speechSynthesis.speaking && !speechSynthesis.paused) {
+                            speechSynthesis.cancel();
+                            playNextBook();
+                        }
+                    });
+                });
+            }
+            
+            // Handler for Chapter Marathon Player
+            function setupChapterMarathonAudioHandler() {
+                const playBtn = document.getElementById('playAudioBtnMarathon');
+                const pauseBtn = document.getElementById('pauseAudioBtnMarathon');
+                const resumeBtn = document.getElementById('resumeAudioBtnMarathon');
+                const stopBtn = document.getElementById('stopAudioBtnMarathon');
+                const statusEl = document.getElementById('audioStatusMarathon');
+                const speedBtns = document.querySelectorAll('.speed-btn-marathon');
+
+                function playNextChapter() {
+                    const book = bibleData[appState.selectedChapterBook];
+                    if (chapterMarathonState.currentChapterIndex >= book.chapters.length) {
+                        resetAudioState('Marathon');
+                        statusEl.textContent = "Maratona de capítulos concluída!";
+                        return;
+                    }
+
+                    const chapterNumber = book.chapters[chapterMarathonState.currentChapterIndex].chapter;
+                    appState.selectedChapter = chapterNumber;
+                    chapterSelect.value = chapterNumber;
+                    renderChapter(appState.selectedChapterBook, chapterNumber);
+                    
+                    const textToSpeak = generateChapterAudioText(appState.selectedChapterBook, chapterNumber);
+                    chapterMarathonState.utterance = new SpeechSynthesisUtterance(textToSpeak);
+                    chapterMarathonState.utterance.lang = 'pt-BR';
+                    chapterMarathonState.utterance.rate = chapterMarathonState.rate;
+
+                    chapterMarathonState.utterance.onstart = () => {
+                        chapterMarathonState.isPlaying = true;
+                        chapterMarathonState.isPaused = false;
+                        updateAudioButtons('Marathon', true, false);
+                        statusEl.textContent = `Reproduzindo: Capítulo ${chapterNumber}...`;
+                    };
+
+                    chapterMarathonState.utterance.onend = () => {
+                        chapterMarathonState.currentChapterIndex++;
+                        playNextChapter();
+                    };
+
+                    speechSynthesis.speak(chapterMarathonState.utterance);
+                }
+
+                playBtn.addEventListener('click', () => {
+                    if (speechSynthesis.speaking) speechSynthesis.cancel();
+                    
+                    chapterMarathonState.isPlaying = true;
+                    chapterMarathonState.currentChapterIndex = 0; 
+                    playNextChapter();
+                });
+
+                pauseBtn.addEventListener('click', () => {
+                    if (speechSynthesis.speaking) {
+                        speechSynthesis.pause();
+                        chapterMarathonState.isPaused = true;
+                        updateAudioButtons('Marathon', true, true);
+                        statusEl.textContent = "Maratona pausada.";
+                    }
+                });
+
+                resumeBtn.addEventListener('click', () => {
+                    if (speechSynthesis.paused) {
+                        speechSynthesis.resume();
+                        chapterMarathonState.isPaused = false;
+                        updateAudioButtons('Marathon', true, false);
+                        statusEl.textContent = `Reproduzindo: Capítulo ${appState.selectedChapter}...`;
+                    }
+                });
+
+                stopBtn.addEventListener('click', () => {
+                    resetAudioState('Marathon');
+                });
+
+                speedBtns.forEach(button => {
+                    button.addEventListener('click', () => {
+                        chapterMarathonState.rate = parseFloat(button.dataset.speed);
+                        speedBtns.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        if (speechSynthesis.speaking && !speechSynthesis.paused) {
+                            speechSynthesis.cancel();
+                            playNextChapter();
+                        }
+                    });
+                });
+            }
+
+            // Handler for Character Marathon Player
+            function setupCharMarathonAudioHandler() {
+                const playBtn = document.getElementById('playAudioBtnCharMarathon');
+                const pauseBtn = document.getElementById('pauseAudioBtnCharMarathon');
+                const resumeBtn = document.getElementById('resumeAudioBtnCharMarathon');
+                const stopBtn = document.getElementById('stopAudioBtnCharMarathon');
+                const statusEl = document.getElementById('audioStatusCharMarathon');
+                const speedBtns = document.querySelectorAll('.speed-btn-char-marathon');
+
+                function playNextCharacter() {
+                    const book = bibleData[appState.selectedCharBook];
+                    const characters = book.characters || [];
+                    if (charMarathonState.currentCharacterIndex >= characters.length) {
+                        resetAudioState('CharMarathon');
+                        statusEl.textContent = "Maratona de personagens concluída!";
+                        return;
+                    }
+
+                    const charName = characters[charMarathonState.currentCharacterIndex].name;
+                    appState.selectedCharacter = charName;
+                    characterSelect.value = charName;
+                    renderCharacter(appState.selectedCharBook, charName);
+                    
+                    const textToSpeak = generateCharacterAudioText(appState.selectedCharBook, charName);
+                    if (!textToSpeak) { // Skip if character has no summary
+                        charMarathonState.currentCharacterIndex++;
+                        playNextCharacter();
+                        return;
+                    }
+
+                    charMarathonState.utterance = new SpeechSynthesisUtterance(textToSpeak);
+                    charMarathonState.utterance.lang = 'pt-BR';
+                    charMarathonState.utterance.rate = charMarathonState.rate;
+
+                    charMarathonState.utterance.onstart = () => {
+                        charMarathonState.isPlaying = true;
+                        charMarathonState.isPaused = false;
+                        updateAudioButtons('CharMarathon', true, false);
+                        statusEl.textContent = `Reproduzindo: ${charName}...`;
+                    };
+
+                    charMarathonState.utterance.onend = () => {
+                        charMarathonState.currentCharacterIndex++;
+                        playNextCharacter();
+                    };
+
+                    speechSynthesis.speak(charMarathonState.utterance);
+                }
+
+                playBtn.addEventListener('click', () => {
+                    if (speechSynthesis.speaking) speechSynthesis.cancel();
+                    
+                    charMarathonState.isPlaying = true;
+                    charMarathonState.currentCharacterIndex = 0; 
+                    playNextCharacter();
+                });
+
+                pauseBtn.addEventListener('click', () => {
+                    if (speechSynthesis.speaking) {
+                        speechSynthesis.pause();
+                        charMarathonState.isPaused = true;
+                        updateAudioButtons('CharMarathon', true, true);
+                        statusEl.textContent = "Maratona pausada.";
+                    }
+                });
+
+                resumeBtn.addEventListener('click', () => {
+                    if (speechSynthesis.paused) {
+                        speechSynthesis.resume();
+                        charMarathonState.isPaused = false;
+                        updateAudioButtons('CharMarathon', true, false);
+                        statusEl.textContent = `Reproduzindo: ${appState.selectedCharacter}...`;
+                    }
+                });
+
+                stopBtn.addEventListener('click', () => {
+                    resetAudioState('CharMarathon');
+                });
+
+                speedBtns.forEach(button => {
+                    button.addEventListener('click', () => {
+                        charMarathonState.rate = parseFloat(button.dataset.speed);
+                        speedBtns.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        if (speechSynthesis.speaking && !speechSynthesis.paused) {
+                            speechSynthesis.cancel();
+                            playNextCharacter();
+                        }
+                    });
+                });
+            }
+
+            function setupAudioHandler(type, config) {
+                const { playBtnId, pauseBtnId, resumeBtnId, stopBtnId, statusId, speedBtnClass, textGenerator } = config;
+                
+                const playBtn = document.getElementById(playBtnId);
+                const pauseBtn = document.getElementById(pauseBtnId);
+                const resumeBtn = document.getElementById(resumeBtnId);
+                const stopBtn = document.getElementById(stopBtnId);
+                const statusEl = document.getElementById(statusId);
+                const speedBtns = document.querySelectorAll(`.${speedBtnClass}`);
+                let rate = 1;
+
+                playBtn.addEventListener('click', () => {
+                    if (speechSynthesis.speaking) {
+                        speechSynthesis.cancel();
+                    }
+                    if (bookMarathonState.isPlaying || chapterMarathonState.isPlaying || charMarathonState.isPlaying) return;
+
+                    const textToSpeak = textGenerator();
+                    if(!textToSpeak || textToSpeak.includes("não encontrado") || textToSpeak.includes("Nenhum personagem")) {
+                        statusEl.textContent = "Conteúdo indisponível para áudio.";
+                        return;
+                    }
+
+                    currentSpeech = new SpeechSynthesisUtterance(textToSpeak);
+                    currentSpeech.lang = 'pt-BR';
+                    currentSpeech.rate = rate;
+                    
+                    currentSpeech.onstart = () => {
+                        updateAudioButtons(type, true);
+                        statusEl.textContent = "Reproduzindo...";
+                    }
+                    currentSpeech.onend = () => {
+                        resetAudioState(type);
+                        statusEl.textContent = "";
+                    }
+                    
+                    speechSynthesis.speak(currentSpeech);
+                });
+
+                pauseBtn.addEventListener('click', () => {
+                    speechSynthesis.pause();
+                    updateAudioButtons(type, true, true);
+                });
+
+                resumeBtn.addEventListener('click', () => {
+                    speechSynthesis.resume();
+                    updateAudioButtons(type, true, false);
+                });
+                
+                stopBtn.addEventListener('click', () => {
+                   resetAudioState(type);
+                });
+
+                speedBtns.forEach(button => {
+                    button.addEventListener('click', () => {
+                        rate = parseFloat(button.dataset.speed);
+                        speedBtns.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        if (speechSynthesis.speaking && !speechSynthesis.paused) {
+                           const text = currentSpeech.text;
+                           speechSynthesis.cancel();
+                           currentSpeech = new SpeechSynthesisUtterance(text);
+                           currentSpeech.lang = 'pt-BR';
+                           currentSpeech.rate = rate;
+                           currentSpeech.onstart = () => {
+                                updateAudioButtons(type, true);
+                                statusEl.textContent = "Reproduzindo...";
+                           }
+                           currentSpeech.onend = () => {
+                                resetAudioState(type);
+                                statusEl.textContent = "";
+                           }
+                           speechSynthesis.speak(currentSpeech);
+                        }
+                    });
+                });
+            }
+            
+            function updateAllContent() {
+                populateAllBookSelects();
+                populateAnalysisFilter();
+                
+                populateChapterSelect(appState.selectedChapterBook);
+                populateCharacterSelect(appState.selectedCharBook);
+                
+                renderBookSummary(appState.selectedBook);
+                renderChapter(appState.selectedChapterBook, appState.selectedChapter);
+                renderCharacter(appState.selectedCharBook, appState.selectedCharacter);
+
+                renderThemesChart(appState.analysisFilter);
+            }
+
+            function render() {
+                views.forEach(view => {
+                    view.classList.add('hidden');
+                });
+                document.getElementById(appState.currentView).classList.remove('hidden');
+
+                navButtons.forEach(button => {
+                    button.classList.remove('active');
+                    if (button.dataset.view === appState.currentView) {
+                        button.classList.add('active');
+                    }
+                });
+
+                if (appState.currentView === 'analiseTematica') {
+                    renderThemesChart(appState.analysisFilter);
+                }
+            }
+
+            // Event Listeners
+            ordinationSelect.addEventListener('change', (e) => {
+                appState.ordination = e.target.value;
+                
+                const newFirstBook = getCurrentBookOrder()[0];
+                appState.selectedBook = newFirstBook;
+                appState.selectedChapterBook = newFirstBook;
+                appState.selectedCharBook = newFirstBook;
+                appState.selectedChapter = 1;
+                appState.selectedCharacter = null;
+                appState.analysisFilter = 'geral';
+
+                updateAllContent();
+            });
+
+            bookSelect.addEventListener('change', (e) => {
+                resetAudioState('BookMarathon');
+                resetAudioState('Book');
+                appState.selectedBook = e.target.value;
+                renderBookSummary(appState.selectedBook);
+            });
+
+            chapterBookSelect.addEventListener('change', (e) => {
+                resetAudioState('Marathon');
+                resetAudioState('Chapter');
+                appState.selectedChapterBook = e.target.value;
+                appState.selectedChapter = 1;
+                populateChapterSelect(appState.selectedChapterBook);
+                renderChapter(appState.selectedChapterBook, appState.selectedChapter);
+            });
+
+            chapterSelect.addEventListener('change', (e) => {
+                resetAudioState('Marathon');
+                resetAudioState('Chapter');
+                appState.selectedChapter = e.target.value;
+                renderChapter(appState.selectedChapterBook, appState.selectedChapter);
+            });
+
+            charBookSelect.addEventListener('change', (e) => {
+                resetAudioState('CharMarathon');
+                resetAudioState('Char');
+                appState.selectedCharBook = e.target.value;
+                appState.selectedCharacter = null;
+                populateCharacterSelect(appState.selectedCharBook);
+                renderCharacter(appState.selectedCharBook, null);
+            });
+
+            characterSelect.addEventListener('change', (e) => {
+                resetAudioState('CharMarathon');
+                resetAudioState('Char');
+                appState.selectedCharacter = e.target.value;
+                renderCharacter(appState.selectedCharBook, e.target.value);
+            });
+
+            analysisFilterSelect.addEventListener('change', (e) => {
+                appState.analysisFilter = e.target.value;
+                renderThemesChart(appState.analysisFilter);
+            });
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    speechSynthesis.cancel(); // Stop any audio when changing views
+                    resetAudioState('BookMarathon');
+                    resetAudioState('Marathon');
+                    resetAudioState('CharMarathon');
+                    appState.currentView = button.dataset.view;
+                    render();
+                });
+            });
+
+            init();
+        });
+    </script>
+</body>
+</html>
