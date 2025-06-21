@@ -1168,19 +1168,19 @@ function renderComparisonGrid() {
         init();      // Depois, anexa os listeners e atualiza o conteúdo
 
         // --- INÍCIO DA CONFIGURAÇÃO DO FIREBASE ---
-        // COLE A SUA CONFIGURAÇÃO QUE VOCÊ COPIOU DO SITE DO FIREBASE AQUI
         const firebaseConfig = {
-  apiKey: "AIzaSyAsJCfNjw7i59sRGDIEFRdC5aQZDROMTKc",
-  authDomain: "estudo-biblico-site.firebaseapp.com",
-  projectId: "estudo-biblico-site",
-  storageBucket: "estudo-biblico-site.firebasestorage.app",
-  messagingSenderId: "1035848513370",
-  appId: "1:1035848513370:web:de0513f65512463fac2563",
-  measurementId: "G-SRXTJ3GXGD"
+            apiKey: "AIzaSyAsJCfNjw7i59sRGDIEFRdC5aQZDROMTKc",
+            authDomain: "estudo-biblico-site.firebaseapp.com",
+            projectId: "estudo-biblico-site",
+            storageBucket: "estudo-biblico-site.firebasestorage.app",
+            messagingSenderId: "1035848513370",
+            appId: "1:1035848513370:web:de0513f65512463fac2563",
+            measurementId: "G-SRXTJ3GXGD"
         };
         // --- FIM DA CONFIGURAÇÃO DO FIREBASE ---
 
-        if (firebaseConfig && firebaseConfig.apiKey !== "AIzaSyAsJCfNjw7i59sRGDIEFRdC5aQZDROMTKc") {
+        // CORREÇÃO: A verificação agora checa apenas se a chave API existe e não está vazia.
+        if (firebaseConfig && firebaseConfig.apiKey) {
             try {
                 const app = initializeApp(firebaseConfig);
                 const db = getFirestore(app);
