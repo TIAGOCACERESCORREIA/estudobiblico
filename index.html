@@ -33,7 +33,6 @@
             background-color: #2563EB; /* Azul (Tailwind blue-600) */
             color: #ffffff;
         }
-        /* Garantir que as colunas na comparação tenham a mesma altura */
         #comparacaoEvangelhos .grid {
             align-items: stretch;
         }
@@ -41,40 +40,179 @@
             display: flex;
             flex-direction: column;
         }
+        #google_translate_element, .skiptranslate { display: none !important; }
+        body > .skiptranslate { display: none !important; }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; }
+        .goog-tooltip { display: none !important; }
+        .VIpgJd-yAWNEb-hvhgNd { display: none !important; }
+
+        /* Estilo customizado para os seletores (combos) */
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem; /* Espaço para a seta */
+        }
     </style>
 </head>
-<body class="bg-amber-50 text-stone-800">
+<body class="bg-amber-50 text-stone-800 flex flex-col min-h-screen">
 
-    <div id="app" class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <div id="app" class="container mx-auto p-4 sm:p-6 lg:p-8 flex-grow">
         
         <header class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold text-amber-900">Estudo Bíblico Interativo</h1>
-            <h2 class="text-2xl md:text-3xl text-amber-800">Antigo e Novo Testamento</h2>
+            <p class="text-lg text-amber-800 mt-2">Uma ferramenta para explorar as Escrituras</p>
         </header>
 
         <nav class="flex flex-wrap justify-center mb-8 bg-amber-100 rounded-lg p-2 shadow-sm gap-2">
             <button data-view="visaoGeral" class="nav-button active text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Visão Geral</button>
+            <button data-view="querigma" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Querigma</button>
             <button data-view="resumoLivros" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Resumo dos Livros</button>
             <button data-view="explorarCapitulos" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Explorar Capítulos</button>
             <button data-view="personagens" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Personagens</button>
             <button data-view="comparacaoEvangelhos" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Comparação Evangelhos</button>
-	    <button data-view="analiseQuerigmatica" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Análise Querigmática</button>
+	    <button data-view="igrejaDeJesus" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Igreja de Jesus</button>
             <button data-view="analiseTematica" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Análise Temática</button>
         </nav>
 
         <main>
-            <!-- O conteúdo de cada visão será renderizado pelo JavaScript -->
+            <!-- Views will be dynamically populated here -->
             <section id="visaoGeral" class="view"></section>
+            <section id="querigma" class="view hidden"></section>
             <section id="resumoLivros" class="view hidden"></section>
             <section id="explorarCapitulos" class="view hidden"></section>
             <section id="personagens" class="view hidden"></section>
             <section id="comparacaoEvangelhos" class="view hidden"></section>
-            <section id="analiseQuerigmatica" class="view hidden"></section>
+
+<section id="igrejaDeJesus" class="view hidden">
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-3xl font-bold text-amber-900 mb-6 text-center">
+                Igreja de Jesus: Um Convite à Plenitude da Comunhão
+            </h2>
+            <div id="igrejaDeJesusText" class="space-y-6 text-lg text-stone-700">
+                <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
+                    Um Caminho Compartilhado em Cristo
+                </h3>
+                <p>
+                    Olá, irmão e irmã em Cristo. Se você está lendo estas palavras, é porque partilhamos do bem mais precioso que existe: o amor por nosso Senhor e Salvador, Jesus Cristo. Cremos em Sua divindade, em Sua morte na cruz para nos salvar e em Sua ressurreição gloriosa. Acreditamos que a Bíblia é a Palavra de Deus, uma lâmpada para os nossos pés e uma luz para o nosso caminho. Este amor comum é o nosso ponto de partida.
+                </p>
+                <p>
+                    Pouco antes de Sua Paixão, Jesus fez uma oração ao Pai, um desejo profundo que ecoa através dos séculos: “<em class="italic">para que todos sejam um, como tu, ó Pai, o és em mim, e eu em ti; que também eles sejam um em nós, para que o mundo creia que tu me enviaste</em>” (João 17:21). Esta unidade não é apenas um sentimento agradável; é o principal sinal para o mundo da verdade do Evangelho.
+                </p>
+                <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
+                    A Grande Família de Deus: Intercessão e Comunhão
+                </h3>
+                <p>
+                    As Escrituras nos dão a <strong class="text-red-700">ORDEM</strong> de orar uns pelos outros (Tiago 5:16). A Bíblia nos dá a <strong class="text-green-700">PROMESSA</strong> de que "a oração de um justo é poderosa e eficaz". Agora, considere: essa família em Cristo é limitada apenas aos que vivem na Terra? Hebreus 12:1 fala que estamos rodeados por uma "grande nuvem de testemunhas". Eles estão vivos em Cristo. O <strong class="text-blue-700">PRINCÍPIO</strong> aqui é o da Comunhão dos Santos. A morte não nos separa do Corpo de Cristo. Nas Bodas de Caná (João 2), Maria intercede junto a Jesus, que, mesmo dizendo "minha hora ainda não chegou", atende ao pedido de Sua mãe. Pedir a ajuda de Maria e dos santos é como pedir um "empurrãozinho" para nossos pedidos chegarem a Jesus com o carinho de Sua família.
+                </p>
+                <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
+                    A Casa de Deus: Uma Só Igreja
+                </h3>
+                <p>
+                    Jesus foi claro ao dar a <strong class="text-red-700">ORDEM</strong> a Pedro: “<em class="italic">Tu és Pedro, e sobre esta pedra edificarei a minha igreja</em>” (Mateus 16:18). A <strong class="text-green-700">PROMESSA</strong> que Ele deu a esta Igreja é inabalável: “<em class="italic">as portas do inferno não prevalecerão contra ela</em>”. A Igreja Católica é a única que pode traçar uma linha histórica ininterrupta até os apóstolos. O <strong class="text-blue-700">PRINCÍPIO</strong> é que a unidade visível é essencial. "Católica" significa "universal", a única Igreja de Cristo para todos.
+                </p>
+                <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
+                    A Palavra de Deus: Escritura e Tradição
+                </h3>
+                <p>
+                    A <strong class="text-red-700">ORDEM</strong> do apóstolo Paulo é clara: “<em class="italic">guardai as tradições que vos foram ensinadas, seja por palavra, seja por epístola nossa</em>” (2 Tessalonicenses 2:15). A <strong class="text-green-700">PROMESSA</strong> implícita é que a totalidade da fé seria preservada. Foi a Igreja Católica que definiu quais livros fariam parte da Bíblia. O <strong class="text-blue-700">PRINCÍPIO</strong> é que a Palavra de Deus nos foi entregue de duas formas: escrita (Bíblia) e oral (Tradição Apostólica). Uma ilumina a outra.
+                </p>
+                <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
+                    Um Convite à Plenitude: A Eucaristia
+                </h3>
+                <p>
+                    A <strong class="text-red-700">ORDEM</strong> de Jesus na Última Ceia foi direta: “<em class="italic">Tomai, comei, isto É o meu corpo</em>” (Mateus 26:26). Em João 6, Ele faz a incrível <strong class="text-green-700">PROMESSA</strong>: “<em class="italic">Quem come a minha carne e bebe o meu sangue tem a vida eterna...</em>”. O <strong class="text-blue-700">PRINCÍPIO</strong> é que estar fora da Igreja Católica é, infelizmente, estar de fora da plenitude deste dom. Nosso convite é para que você venha para casa, para a unidade visível da Igreja que Cristo fundou, e participe do banquete que Ele mesmo preparou para nós.
+                </p>
+            </div>
+
+            <!-- Controles de Áudio Corretos -->
+            <div class="mt-6 p-4 border-t border-amber-200">
+                <h4 class="font-semibold text-lg mb-3">Ouvir o Texto da Página</h4>
+                <div class="flex items-center gap-4 flex-wrap">
+                    <div class="flex gap-1">
+                        <button id="playAudioBtnIgrejaDeJesus" class="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">▶</button>
+                        <button id="pauseAudioBtnIgrejaDeJesus" class="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-colors hidden">⏸</button>
+                        <button id="resumeAudioBtnIgrejaDeJesus" class="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors hidden">▶</button>
+                        <button id="stopAudioBtnIgrejaDeJesus" class="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors hidden">⏹</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-medium">Velocidade:</span>
+                        <div class="flex gap-1">
+                            <button data-speed="0.5" class="speed-btn speed-btn-igrejadejesus px-2 py-1 text-xs rounded-md transition-colors bg-gray-200 text-gray-800">0.5x</button>
+                            <button data-speed="1" class="speed-btn speed-btn-igrejadejesus px-2 py-1 text-xs rounded-md transition-colors active bg-blue-600 text-white">1x</button>
+                            <button data-speed="1.25" class="speed-btn speed-btn-igrejadejesus px-2 py-1 text-xs rounded-md transition-colors bg-gray-200 text-gray-800">1.25x</button>
+                            <button data-speed="1.5" class="speed-btn speed-btn-igrejadejesus px-2 py-1 text-xs rounded-md transition-colors bg-gray-200 text-gray-800">1.5x</button>
+                            <button data-speed="1.75" class="speed-btn speed-btn-igrejadejesus px-2 py-1 text-xs rounded-md transition-colors bg-gray-200 text-gray-800">1.75x</button>
+                            <button data-speed="2" class="speed-btn speed-btn-igrejadejesus px-2 py-1 text-xs rounded-md transition-colors bg-gray-200 text-gray-800">2x</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="audioStatusIgrejaDeJesus" class="text-sm text-stone-600 mt-2 h-4"></div>
+            </div>
+        </div>
+    </section>
+
             <section id="analiseTematica" class="view hidden"></section>
         </main>
     </div>
 
-    <script>
+    <footer class="text-center p-4 text-sm text-stone-500">
+        <div id="visitorCount"></div>
+    </footer>
+    
+    <div id="google_translate_element"></div>
+
+    <!-- SCRIPT PRINCIPAL -->
+    <script type="module">
+        // Importações do Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+
+        // --- Variáveis Globais e de Estado ---
+        let currentSpeech = null; 
+        let speechKeepAliveInterval = null;
+
+        let bookMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
+        let chapterMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
+        let charMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
+
+        let navButtons, views;
+
+        const audioConfigs = {
+            'Book': { state: null, textGenerator: (state) => generateBookAudioText(state.selectedBook) },
+            'BookMarathon': { state: bookMarathonState, textGenerator: (bookKey) => generateBookAudioText(bookKey) },
+            'Chapter': { state: null, textGenerator: (state) => generateChapterAudioText(state.selectedChapterBook, state.selectedChapter) },
+            'ChapterMarathon': { state: chapterMarathonState, textGenerator: (item) => generateChapterAudioText(appState.selectedChapterBook, item.chapter) },
+            'Char': { state: null, textGenerator: (state) => generateCharacterAudioText(state.selectedCharBook, state.selectedCharacter) },
+            'CharMarathon': { state: charMarathonState, textGenerator: (item) => generateCharacterAudioText(appState.selectedCharBook, item.name) },
+            'Querigma': { state: null, textGenerator: () => generateQuerigmaAudioText() },
+	    'IgrejaDeJesus': { state: null, textGenerator: () => document.getElementById('igrejaDeJesusText').textContent.trim() || "Conteúdo não encontrado." }
+    	};
+            // ---- LISTAS DE ORDENAÇÃO ----
+            const ORDER_AVE_MARIA = ['genesis' , 'exodo' , 'salmos' , 'proverbios' , 'isaias' , 'daniel' , 'mateus' , 'marcos' , 'galatas' , 'lucas' , 'joao' , 'atos' , 'galatas' , '1joao' , 'apocalipse'];
+            const ORDER_JONAS_ABIB = ['1joao' , 'joao' , 'marcos' , 'lucas' , 'atos' , 'mateus' , 'apocalipse' , 'genesis' , 'exodo', 'isaias', 'salmos' , 'proverbios' , 'daniel'];
+            // -----------------------------
+
+    const defaultState = {
+        currentView: 'visaoGeral',
+        ordination: 'aveMaria',
+        selectedBook: 'genesis', 
+        selectedChapterBook: 'genesis',
+        selectedChapter: 1,
+        selectedCharBook: 'genesis',
+        selectedCharacter: null,
+        analysisFilter: 'geral',
+        currentLanguage: 'pt-BR'
+    };
+        
+        let appState = { ...defaultState };
+
     // ===================================================================================
     // ===================================================================================
     // ||                                                                               ||
@@ -672,1002 +810,393 @@ characters: [
     // ===================================================================================
     // ===================================================================================
 
-    document.addEventListener('DOMContentLoaded', () => {
-            const visaoGeralView = document.getElementById('visaoGeral');
-            visaoGeralView.innerHTML = `
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Configurações de Estudo</h3>
-                     <div class="mb-8 flex flex-col sm:flex-row items-center justify-center gap-4 bg-amber-50 p-4 rounded-lg">
-                        <label for="ordinationSelect" class="text-lg font-semibold text-amber-900">Ordem dos Livros:</label>
-                        <select id="ordinationSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500">
-                            <option value="aveMaria">Ordenação Bíblia Ave Maria</option>
-                            <option value="jonasAbib">Ordenação Mons. Jonas Abib</option>
+        function saveStateToSession() {
+            sessionStorage.setItem('bibleApp', JSON.stringify({
+                currentView: appState.currentView,
+                ordination: appState.ordination,
+                currentLanguage: appState.currentLanguage
+            }));
+        }
+
+        function loadStateFromSession() {
+            try {
+                const savedState = sessionStorage.getItem('bibleApp');
+                if (savedState) {
+                    const parsedState = JSON.parse(savedState);
+                    appState = { ...appState, ...parsedState };
+                }
+            } catch (e) {
+                console.error("Failed to load state from session storage.", e);
+                appState = { ...defaultState };
+            }
+        }
+        
+        function init() {
+            navButtons = document.querySelectorAll('.nav-button');
+            views = document.querySelectorAll('.view');
+            
+            initViews();
+            setupGlobalEventListeners();
+            setupAllAudioListeners();
+            
+            updateAllContent();
+            render();
+            
+            changeLanguage(appState.currentLanguage, true); 
+        }
+
+        function initViews() {
+            const selectClasses = "custom-select mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-stone-300 bg-white focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm rounded-md font-semibold text-stone-700 shadow-sm";
+            
+    document.getElementById('visaoGeral').innerHTML = `
+        <div class="bg-white rounded-lg shadow mb-6">
+            <div class="p-6">
+                <h3 class="text-2xl font-bold text-amber-900 mb-4 text-center">Configurações de Estudo</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                    <div>
+                        <label for="ordinationSelect" class="block text-sm font-semibold text-gray-700 mb-1">Ordem de Leitura:</label>
+                        <select id="ordinationSelect" class="${selectClasses}">
+                            <option value="aveMaria">Ordenar conforme Bíblia Ave Maria</option>
+                            <option value="jonasAbib">Ordenar conforme sugestão Mons. Jonas Abib</option>
                         </select>
                     </div>
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Metodologia de Estudo</h3>
-                     <div class="space-y-4 text-stone-700">
-                        <p>Para tornar prático nosso estudo da Palavra de Deus, podemos usar um método simples e profundo, identificando no texto sagrado as ordens, as promessas e os princípios que o Senhor nos revela.</p>
-                        <p>Primeiro, Deus nos dá <strong class="text-red-700">ORDENS</strong>. São convites diretos à ação. "Ide e anunciai!", "Arrependei-vos!", "Não temais!". Em nosso dia a dia, essa ordem se traduz em gestos concretos: a coragem de falar de nossa fé, a paciência com um familiar, a decisão de perdoar. São os "ide" de Deus em nossa rotina, que nos tiram da paralisia e nos colocam em movimento.</p>
-                        <p>Segundo, em meio às ordens, Deus nos sustenta com suas <strong class="text-green-700">PROMESSAS</strong>. Que maravilha! Ele não nos manda para a batalha de mãos vazias. A grande promessa que permeia toda a Escritura é: "Eu estarei convosco!", "Recebereis a força do alto!", "A tua descendência possuirá a terra!". Quando o medo bater ou a dificuldade parecer insuperável, devemos nos agarrar a estas promessas. Elas são a nossa certeza de que a obra não é nossa, mas de Deus, e que Ele a levará a bom termo.</p>
-                        <p>Por fim, a Palavra nos revela os <strong class="text-blue-700">PRINCÍPIOS</strong> do Reino. São as verdades eternas, o "modo de funcionar" de Deus e de sua criação. Vemos princípios fundamentais como o da comunhão fraterna, o da oração constante, o da aliança, o da semeadura e colheita, e o da soberania divina. Viver estes princípios é construir, já aqui na terra, a civilização do amor que Cristo veio inaugurar e que desde o princípio Deus planejou para a humanidade.</p>
-                     </div>
-                     <div class="mt-8 pt-4 border-t-2 border-amber-100">
-                        <p class="text-sm text-stone-600 italic">
-                            <strong>Referência:</strong> O método de estudo apresentado (Ordens, Promessas e Princípios) foi inspirado nos ensinamentos do Monsenhor Jonas Abib, conforme partilhado em seu livro 
-                            <a href="https://loja.cancaonova.com/livro-a-biblia-no-meu-dia-a-dia" target="_blank" class="text-amber-700 hover:underline hover:text-amber-800 transition-colors">"A Bíblia no meu dia-a-dia"</a>.
-                        </p>
-                    </div>
-                </div>
-            `;
-
-            const resumoLivrosView = document.getElementById('resumoLivros');
-            resumoLivrosView.innerHTML = `
-                <div class="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4">
-                     <label for="bookSelect" class="text-lg font-semibold text-amber-900">Selecione um Livro:</label>
-                     <select id="bookSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
-                </div>
-                 <div id="audioSectionBook" class="bg-white rounded-xl shadow-md p-6 mb-6">
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Podcast do Livro Individual</h3>
-                    <div class="flex items-center justify-center gap-4 mb-4">
-                         <button id="playAudioBtnBook" class="bg-sky-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-sky-800 transition duration-300 shadow-md">🎙️ Ouvir Resumo</button>
-                         <button id="pauseAudioBtnBook" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
-                         <button id="resumeAudioBtnBook" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
-                         <button id="stopAudioBtnBook" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
-                    </div>
-                     <div class="flex items-center justify-center gap-2">
-                        <span class="text-sm font-semibold">Velocidade:</span>
-                        <button data-speed="1" class="speed-btn speed-btn-book active font-bold py-1 px-3 rounded-lg text-sm">1x</button>
-                        <button data-speed="1.25" class="speed-btn speed-btn-book bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.25x</button>
-                        <button data-speed="1.5" class="speed-btn speed-btn-book bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
-                        <button data-speed="1.75" class="speed-btn speed-btn-book bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.75x</button>
-                        <button data-speed="2" class="speed-btn speed-btn-book bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
-                     </div>
-                     <p id="audioStatusBook" class="text-center text-sm text-stone-500 mt-2"></p>
-                </div>
-                 <div id="audioSectionBookMarathon" class="mt-6 bg-white rounded-xl shadow-md p-6 border-t-4 border-amber-300">
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Maratona de Livros</h3>
-                    <div class="flex items-center justify-center gap-4 mb-4">
-                         <button id="playAudioBtnBookMarathon" class="bg-indigo-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-indigo-800 transition duration-300 shadow-md">📚 Ouvir Todos os Livros</button>
-                         <button id="pauseAudioBtnBookMarathon" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
-                         <button id="resumeAudioBtnBookMarathon" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
-                         <button id="stopAudioBtnBookMarathon" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
-                    </div>
-                     <div class="flex items-center justify-center gap-2">
-                        <span class="text-sm font-semibold">Velocidade:</span>
-                        <button data-speed="1" class="speed-btn speed-btn-book-marathon active font-bold py-1 px-3 rounded-lg text-sm">1x</button>
-                        <button data-speed="1.25" class="speed-btn speed-btn-book-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.25x</button>
-                        <button data-speed="1.5" class="speed-btn speed-btn-book-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
-                        <button data-speed="1.75" class="speed-btn speed-btn-book-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.75x</button>
-                        <button data-speed="2" class="speed-btn speed-btn-book-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
-                     </div>
-                     <p id="audioStatusBookMarathon" class="text-center text-sm text-stone-500 mt-2"></p>
-                </div>
-                <div id="bookContent" class="bg-white rounded-xl shadow-md p-6 min-h-[400px] mt-6"></div>
-            `;
-
-            const explorarCapitulosView = document.getElementById('explorarCapitulos');
-            explorarCapitulosView.innerHTML = `
-                <div class="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4">
-                     <label for="chapterBookSelect" class="text-lg font-semibold text-amber-900">Selecione um Livro:</label>
-                     <select id="chapterBookSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
-                     <label for="chapterSelect" class="text-lg font-semibold text-amber-900">Selecione um Capítulo:</label>
-                     <select id="chapterSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
-                </div>
-                <div id="chapterContent" class="bg-white rounded-xl shadow-md p-6 min-h-[400px]"></div>
-                <div id="audioSectionChapter" class="mt-6 bg-white rounded-xl shadow-md p-6">
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Podcast do Capítulo Individual</h3>
-                    <div class="flex items-center justify-center gap-4 mb-4">
-                         <button id="playAudioBtnChapter" class="bg-sky-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-sky-800 transition duration-300 shadow-md">🎙️ Ouvir Resumo do Capítulo</button>
-                         <button id="pauseAudioBtnChapter" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
-                         <button id="resumeAudioBtnChapter" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
-                         <button id="stopAudioBtnChapter" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
-                    </div>
-                     <div class="flex items-center justify-center gap-2">
-                        <span class="text-sm font-semibold">Velocidade:</span>
-                        <button data-speed="1" class="speed-btn speed-btn-chapter active font-bold py-1 px-3 rounded-lg text-sm">1x</button>
-                        <button data-speed="1.25" class="speed-btn speed-btn-chapter bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.25x</button>
-                        <button data-speed="1.5" class="speed-btn speed-btn-chapter bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
-                        <button data-speed="1.75" class="speed-btn speed-btn-chapter bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.75x</button>
-                        <button data-speed="2" class="speed-btn speed-btn-chapter bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
-                     </div>
-                     <p id="audioStatusChapter" class="text-center text-sm text-stone-500 mt-2"></p>
-                </div>
-                <div id="audioSectionChapterMarathon" class="mt-6 bg-white rounded-xl shadow-md p-6 border-t-4 border-amber-300">
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Maratona de Capítulos</h3>
-                    <div class="flex items-center justify-center gap-4 mb-4">
-                         <button id="playAudioBtnChapterMarathon" class="bg-purple-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-800 transition duration-300 shadow-md">🎧 Ouvir Todos os Capítulos</button>
-                         <button id="pauseAudioBtnChapterMarathon" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
-                         <button id="resumeAudioBtnChapterMarathon" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
-                         <button id="stopAudioBtnChapterMarathon" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
-                    </div>
-                     <div class="flex items-center justify-center gap-2">
-                        <span class="text-sm font-semibold">Velocidade:</span>
-                        <button data-speed="1" class="speed-btn speed-btn-chapter-marathon active font-bold py-1 px-3 rounded-lg text-sm">1x</button>
-                        <button data-speed="1.25" class="speed-btn speed-btn-chapter-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.25x</button>
-                        <button data-speed="1.5" class="speed-btn speed-btn-chapter-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
-                        <button data-speed="1.75" class="speed-btn speed-btn-chapter-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.75x</button>
-                        <button data-speed="2" class="speed-btn speed-btn-chapter-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
-                     </div>
-                     <p id="audioStatusChapterMarathon" class="text-center text-sm text-stone-500 mt-2"></p>
-                </div>
-            `;
-            
-            const personagensView = document.getElementById('personagens');
-            personagensView.innerHTML = `
-                <div class="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4">
-                    <label for="charBookSelect" class="text-lg font-semibold text-amber-900">Livro:</label>
-                    <select id="charBookSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
-                    <label for="characterSelect" class="text-lg font-semibold text-amber-900">Personagem:</label>
-                    <select id="characterSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
-                </div>
-                <div id="characterContent" class="bg-white rounded-xl shadow-md p-6 min-h-[200px] mb-6">
-                    <p class="text-center text-stone-500">Selecione um livro e um personagem para ver um resumo sobre ele.</p>
-                </div>
-                 <div id="audioSectionChar" class="bg-white rounded-xl shadow-md p-6">
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Áudio do Personagem</h3>
-                    <div class="flex items-center justify-center gap-4 mb-4">
-                         <button id="playAudioBtnChar" class="bg-sky-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-sky-800 transition duration-300 shadow-md">🎙️ Ouvir Resumo do Personagem</button>
-                         <button id="pauseAudioBtnChar" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
-                         <button id="resumeAudioBtnChar" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
-                         <button id="stopAudioBtnChar" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
-                    </div>
-                     <div class="flex items-center justify-center gap-2">
-                        <span class="text-sm font-semibold">Velocidade:</span>
-                        <button data-speed="1" class="speed-btn speed-btn-char active font-bold py-1 px-3 rounded-lg text-sm">1x</button>
-                        <button data-speed="1.25" class="speed-btn speed-btn-char bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.25x</button>
-                        <button data-speed="1.5" class="speed-btn speed-btn-char bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
-                        <button data-speed="1.75" class="speed-btn speed-btn-char bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.75x</button>
-                        <button data-speed="2" class="speed-btn speed-btn-char bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
-                     </div>
-                     <p id="audioStatusChar" class="text-center text-sm text-stone-500 mt-2"></p>
-                </div>
-                <div id="audioSectionCharMarathon" class="mt-6 bg-white rounded-xl shadow-md p-6 border-t-4 border-amber-300">
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4">Maratona de Personagens</h3>
-                    <div class="flex items-center justify-center gap-4 mb-4">
-                         <button id="playAudioBtnCharMarathon" class="bg-purple-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-800 transition duration-300 shadow-md">👥 Ouvir Todos os Personagens</button>
-                         <button id="pauseAudioBtnCharMarathon" class="hidden bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">⏸️ Pausar</button>
-                         <button id="resumeAudioBtnCharMarathon" class="hidden bg-green-600 text-white font-bold py-2 px-4 rounded-lg">▶️ Retomar</button>
-                         <button id="stopAudioBtnCharMarathon" class="hidden bg-red-600 text-white font-bold py-2 px-4 rounded-lg">⏹️ Parar</button>
-                    </div>
-                     <div class="flex items-center justify-center gap-2">
-                        <span class="text-sm font-semibold">Velocidade:</span>
-                        <button data-speed="1" class="speed-btn speed-btn-char-marathon active font-bold py-1 px-3 rounded-lg text-sm">1x</button>
-                        <button data-speed="1.25" class="speed-btn speed-btn-char-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.25x</button>
-                        <button data-speed="1.5" class="speed-btn speed-btn-char-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.5x</button>
-                        <button data-speed="1.75" class="speed-btn speed-btn-char-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">1.75x</button>
-                        <button data-speed="2" class="speed-btn speed-btn-char-marathon bg-gray-200 text-gray-800 font-bold py-1 px-3 rounded-lg text-sm">2x</button>
-                     </div>
-                     <p id="audioStatusCharMarathon" class="text-center text-sm text-stone-500 mt-2"></p>
-                </div>
-            `;
-
-            const analiseTematicaView = document.getElementById('analiseTematica');
-            analiseTematicaView.innerHTML = `
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-                    <div class="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4">
-                        <label for="analysisFilterSelect" class="text-lg font-semibold text-amber-900">Filtrar Análise:</label>
-                        <select id="analysisFilterSelect" class="bg-white border-2 border-amber-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="themesChart"></canvas>
-                    </div>
-                </div>
-            `;
-
-const analiseQuerigmaticaView = document.getElementById('analiseQuerigmatica');
-analiseQuerigmaticaView.innerHTML = `
-    <div class="bg-white rounded-xl shadow-md p-6">
-        <h2 class="text-3xl md:text-4xl font-bold text-amber-900 mb-6 text-center">
-            Análise Querigmática: As Verdades Comuns dos Evangelhos
-        </h2>
-
-        <div class="space-y-6 text-lg text-stone-700">
-            <p>Queridos irmãos e irmãs,</p>
-            <p>
-                Ao contemplarmos a riqueza dos Evangelhos, seja na narrativa de Marcos, na teologia profunda de João, na compaixão de Lucas ou na visão do Reino de Mateus, percebemos que, apesar das perspectivas únicas de cada evangelista, um coração comum pulsa em todas elas: o Querigma. O Querigma não é apenas uma mensagem; é o anúncio vibrante de uma realidade que transforma tudo. É a proclamação essencial que deu origem e sustenta a nossa fé.
-            </p>
-
-            <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
-                A Grande Ordem Comum: "Arrependei-vos e Crede no Evangelho!"
-            </h3>
-            <p>
-                Em Marcos (1,15), Jesus inicia seu ministério com esta ordem categórica: "O tempo está cumprido, e o Reino de Deus está próximo; arrependei-vos e crede no Evangelho." Mateus (3,2) e Lucas (3,8) ecoam o chamado ao arrependimento de João Batista, exigindo "frutos dignos de arrependimento". João, por sua vez, nos convida a "crer naquele que Deus enviou" (Jo 6,29).
-            </p>
-            <p class="italic">
-                <strong>Aplicação Cotidiana:</strong> Esta ordem não é um conselho, mas uma convocação urgente para uma mudança radical de mente e coração. No dia a dia, isso significa:
-                <ul class="list-disc list-inside ml-4 space-y-1 text-red-700">
-                    <li><strong class="font-bold">Reconhecer o erro:</strong> Ter a humildade de admitir nossos pecados e falhas, em vez de justificar-nos.</li>
-                    <li><strong class="font-bold">Mudar de direção:</strong> Afastar-nos daquilo que nos afasta de Deus, seja um hábito, uma mentalidade ou um relacionamento.</li>
-                    <li><strong class="font-bold">Confiar em Cristo:</strong> Colocar nossa fé não em nossas obras ou méritos, mas na pessoa de Jesus e em sua obra redentora. Aceitar a boa nova de Seu amor e salvação.</li>
-                </ul>
-            </p>
-
-            <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
-                A Magna Promessa Comum: "Tereis Vida em Meu Nome e o Espírito Santo"
-            </h3>
-            <p>
-                João afirma o propósito de seu Evangelho: "Para que, crendo, tenhais vida em seu nome" (Jo 20,31). Esta vida não é apenas existência, mas vida em abundância (Jo 10,10), vida eterna que começa agora. Mateus conclui com a promessa da presença constante de Jesus: "Eu estou convosco todos os dias, até o fim dos tempos" (Mt 28,20). Lucas (24,49) e Atos (1,5) destacam a promessa do Espírito Santo, que virá para capacitar os discípulos. Marcos (16,17-18) fala dos sinais que acompanharão os que creem.
-            </p>
-            <p class="italic">
-                <strong>Aplicação Cotidiana:</strong> As promessas divinas são o motor da nossa esperança. Elas nos garantem que não estamos sozinhos na jornada.
-                <ul class="list-disc list-inside ml-4 space-y-1 text-green-700">
-                    <li><strong class="font-bold">Confiança na Providência:</strong> Saber que Jesus está conosco em todas as circunstâncias, mesmo nas mais difíceis. Isso nos dá paz para enfrentar os desafios.</li>
-                    <li><strong class="font-bold">Poder para a Missão:</strong> O Espírito Santo, prometido e derramado, nos capacita a viver o Evangelho e a ser testemunhas eficazes. Invocar o Espírito antes de qualquer tarefa e buscar Sua guia.</li>
-                    <li><strong class="font-bold">Esperança da Vida Eterna:</strong> A certeza de que a vida em Cristo é eterna e plena, e que a morte não tem a última palavra. Isso nos liberta do medo e nos impulsiona a viver para o que realmente importa.</li>
-                </ul>
-            </p>
-
-            <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
-                O Princípio Universal: A Cruz, o Serviço e o Amor
-            </h3>
-            <p>
-                Em essência, todos os Evangelhos revelam o princípio paradoxal do Reino: a verdadeira grandeza e a vitória vêm através da humilhação, do serviço e do sacrifício. Marcos (10,45) afirma: "O Filho do Homem não veio para ser servido, mas para servir e dar a sua vida em resgate por muitos." João (13,14-15) mostra Jesus lavando os pés dos discípulos, deixando um exemplo de serviço humilde e um "novo mandamento": "Que vos ameis uns aos outros; como eu vos amei" (Jo 13,34). Mateus (16,24) enfatiza que seguir a Jesus significa "negar-se a si mesmo, tomar a sua cruz e segui-lo." Lucas, com suas parábolas da misericórdia, revela o princípio da predileção de Deus pelos pobres e pecadores.
-            </p>
-            <p class="italic">
-                <strong>Aplicação Cotidiana:</strong> Estes princípios são o DNA do discipulado cristão. Viver por eles é viver em conformidade com o coração de Cristo.
-                <ul class="list-disc list-inside ml-4 space-y-1 text-blue-700">
-                    <li><strong class="font-bold">Espírito de Serviço:</strong> Buscar servir ao invés de ser servido, especialmente os mais necessitados, vendo o próprio Cristo neles.</li>
-                    <li><strong class="font-bold">Amor Incondicional:</strong> Amar o próximo como Cristo nos amou, sem esperar nada em troca, perdoando e estendendo a mão, mesmo aos que nos ofendem.</li>
-                    <li><strong class="font-bold">Aceitação da Cruz:</strong> Entender que o sofrimento e as dificuldades fazem parte do caminho do discipulado e que, ao abraçá-los em união com Cristo, eles se tornam instrumentos de redenção.</li>
-                </ul>
-            </p>
-
-            <p class="mt-8">
-                Que estas ordens, promessas e princípios, comuns a todos os relatos evangélicos, nos inspirem a viver uma fé mais autêntica e corajosa, revelando o rosto de Cristo ao mundo em nossa vida diária. Amém.
-            </p>
-        </div>
-    </div>
-`;
-
-            const views = document.querySelectorAll('.view');
-            const navButtons = document.querySelectorAll('.nav-button');
-            
-            let themesChartInstance = null;
-            let currentSpeech = null;
-
-            // ---- LISTAS DE ORDENAÇÃO ----
-            const ORDER_AVE_MARIA = ['genesis' , 'exodo' , 'salmos' , 'proverbios' , 'isaias' , 'daniel' , 'mateus' , 'marcos' , 'galatas' , 'lucas' , 'joao' , 'atos' , 'galatas' , '1joao' , 'apocalipse'];
-            const ORDER_JONAS_ABIB = ['1joao' , 'joao' , 'marcos' , 'lucas' , 'atos' , 'mateus' , 'apocalipse' , 'genesis' , 'exodo', 'isaias', 'salmos' , 'proverbios' , 'daniel'];
-            // -----------------------------
-
-            let bookMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
-            let chapterMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
-            let charMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
-            
-            const appState = {
-                currentView: 'visaoGeral',
-                ordination: 'aveMaria',
-                selectedBook: 'mateus',
-                selectedChapterBook: 'mateus',
-                selectedChapter: 1,
-                selectedCharBook: 'mateus',
-                selectedCharacter: null,
-                analysisFilter: 'geral'
-            };
-
-            function getCurrentBookOrder() {
-                const order = appState.ordination === 'jonasAbib' ? ORDER_JONAS_ABIB : ORDER_AVE_MARIA;
-                return order.filter(key => bibleData.hasOwnProperty(key));
-            }
-
-            function init() {
-                const currentOrder = getCurrentBookOrder();
-                if (currentOrder.length === 0) {
-                    document.body.innerHTML = `<div class="text-center p-8"><h1 class="text-2xl text-red-700">Erro: Nenhum livro para exibir.</h1><p>Verifique os dados dos livros e as listas de ordenação no código.</p></div>`;
-                    return;
-                }
-                
-                appState.selectedBook = currentOrder[0];
-                appState.selectedChapterBook = currentOrder[0];
-                appState.selectedCharBook = currentOrder[0];
-
-                updateAllContent();
-                render();
-                
-                // Audio handlers setup
-                ['Book', 'Chapter', 'Char'].forEach(type => {
-                    setupAudioHandler(type, {
-                        playBtnId: `playAudioBtn${type}`, pauseBtnId: `pauseAudioBtn${type}`, resumeBtnId: `resumeAudioBtn${type}`, stopBtnId: `stopAudioBtn${type}`, statusId: `audioStatus${type}`, speedBtnClass: `speed-btn-${type.toLowerCase()}`,
-                        textGenerator: () => {
-                            if (type === 'Book') return generateBookAudioText(appState.selectedBook);
-                            if (type === 'Chapter') return generateChapterAudioText(appState.selectedChapterBook, appState.selectedChapter);
-                            if (type === 'Char') return generateCharacterAudioText(appState.selectedCharBook, appState.selectedCharacter);
-                        }
-                    });
-                });
-                
-                setupBookMarathonAudioHandler();
-                setupChapterMarathonAudioHandler();
-                setupCharMarathonAudioHandler();
-            }
-            
-            function populateBookSelect(selector, selectedValue) {
-                const currentOrder = getCurrentBookOrder();
-                selector.innerHTML = '';
-                currentOrder.forEach(key => {
-                    const option = document.createElement('option');
-                    option.value = key;
-                    option.textContent = bibleData[key].name;
-                    selector.appendChild(option);
-                });
-                selector.value = selectedValue;
-            }
-
-            function populateAllBookSelects() {
-                populateBookSelect(document.getElementById('bookSelect'), appState.selectedBook);
-                populateBookSelect(document.getElementById('chapterBookSelect'), appState.selectedChapterBook);
-                populateBookSelect(document.getElementById('charBookSelect'), appState.selectedCharBook);
-            }
-            
-            function populateAnalysisFilter() {
-                const analysisFilterSelect = document.getElementById('analysisFilterSelect');
-                const currentOrder = getCurrentBookOrder();
-                analysisFilterSelect.innerHTML = '<option value="geral">Geral (Todos os Livros)</option>';
-                currentOrder.forEach(key => {
-                     const option = document.createElement('option');
-                    option.value = key;
-                    option.textContent = bibleData[key].name;
-                    analysisFilterSelect.appendChild(option);
-                });
-            }
-            
-            function populateChapterSelect(bookKey) {
-                const chapterSelect = document.getElementById('chapterSelect');
-                chapterSelect.innerHTML = '';
-                const book = bibleData[bookKey];
-                if (!book || !book.chapters) return;
-                book.chapters.forEach(chapter => {
-                    const option = document.createElement('option');
-                    option.value = chapter.chapter;
-                    option.textContent = `Capítulo ${chapter.chapter}: ${chapter.title}`;
-                    chapterSelect.appendChild(option);
-                });
-                chapterSelect.value = appState.selectedChapter;
-            }
-
-            function populateCharacterSelect(bookKey) {
-                const characterSelect = document.getElementById('characterSelect');
-                characterSelect.innerHTML = '<option value="">-- Escolha --</option>';
-                const book = bibleData[bookKey];
-                if(book && book.characters && book.characters.length > 0) {
-                    book.characters.forEach(char => {
-                        const option = document.createElement('option');
-                        option.value = char.name;
-                        option.textContent = char.name;
-                        characterSelect.appendChild(option);
-                    });
-                } else {
-                     characterSelect.innerHTML = '<option value="">Sem personagens</option>';
-                }
-            }
-
-            function renderBookSummary(bookKey) {
-                const book = bibleData[bookKey];
-                const bookContent = document.getElementById('bookContent');
-                if (!book || !bookContent) return;
-                let contentHTML = `
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold text-amber-900 mb-4">Resumo Geral do Livro de ${book.name}</h3>
-                        <div class="space-y-4 text-stone-700"><p>${book.summary}</p></div>
-                    </div>
                     <div>
-                        ${book.homily}
+                        <label for="languageSelect" class="block text-sm font-semibold text-gray-700 mb-1">Idioma:</label>
+                        <select id="languageSelect" class="${selectClasses}">
+                            <option value="pt-BR">Português (Brasil)</option>
+                            <option value="pt-PT">Português (Portugal)</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="it">Italiano</option>
+                        </select>
                     </div>
-                `;
-                bookContent.innerHTML = contentHTML;
-                if (!bookMarathonState.isPlaying) {
-                    resetAudioState('Book');
-                }
-            }
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-2xl font-bold text-amber-900 mb-4">Objetivo da Página e Metodologia de Estudo</h3>
+            <div class="space-y-4 text-stone-700">
+                <p>Bem-vindo ao nosso Estudo Bíblico Interativo! O objetivo desta página é fornecer um <strong>conhecimento bíblico inicial e fundamental, baseado no dogma católico</strong>, para que iniciantes possam ter uma primeira visão e entendimento rápido da Bíblia, antes de se aprofundarem em estudos mais complexos. Buscamos apresentar a Palavra de Deus de forma acessível e contextualizada.</p>
+                <p>Para tornar prático nosso estudo da Palavra de Deus, podemos usar um método simples e profundo, identificando no texto sagrado as ordens, as promessas e os princípios que o Senhor nos revela.</p>
+                <p>Primeiro, Deus nos dá <strong class="text-red-700">ORDENS</strong>. São convites diretos à ação. "Ide e anunciai!", "Arrependei-vos!", "Não temais!". Em nosso dia a dia, essa ordem se traduz em gestos concretos: a coragem de falar de nossa fé, a paciência com um familiar, a decisão de perdoar. São os "ide" de Deus em nossa rotina, que nos tiram da paralisia e nos colocam em movimento.</p>
+                <p>Segundo, em meio às ordens, Deus nos sustenta com suas <strong class="text-green-700">PROMESSAS</strong>. Que maravilha! Ele não nos manda para a batalha de mãos vazias. A grande promessa que permeia toda a Escritura é: "Eu estarei convosco!", "Recebereis a força do alto!", "A tua descendência possuirá a terra!". Quando o medo bater ou a dificuldade parecer insuperável, devemos nos agarrar a estas promessas. Elas são a nossa certeza de que a obra não é nossa, mas de Deus, e que Ele a levará a bom termo.</p>
+                <p>Por fim, a Palavra nos revela os <strong class="text-blue-700">PRINCÍPIOS</strong> do Reino. São as verdades eternas, o "modo de funcionar" de Deus e de sua criação. Vemos princípios fundamentais como o da comunhão fraterna, o da oração constante, o da aliança, o da semeadura e colheita, e o da soberania divina. Viver estes princípios é construir, já aqui na terra, a civilização do amor que Cristo veio inaugurar e que desde o princípio Deus planejou para a humanidade.</p>
+            </div>
+            <div class="mt-8 pt-4 border-t-2 border-amber-100">
+                <p class="text-sm text-stone-600 italic">
+                    <strong>Referência:</strong> O método de estudo apresentado (Ordens, Promessas e Princípios) foi inspirado nos ensinamentos do Monsenhor Jonas Abib, conforme partilhado em seu livro 
+                    <a href="[https://loja.cancaonova.com/livro-a-biblia-no-meu-dia-a-dia](https://loja.cancaonova.com/livro-a-biblia-no-meu-dia-a-dia)" target="_blank" class="text-amber-700 hover:underline hover:text-amber-800 transition-colors">"A Bíblia no meu dia-a-dia"</a>.
+                </p>
+            </div>
+        </div>
+    `;
 
-            function renderChapter(bookKey, chapterNumber) {
-                const chapterContent = document.getElementById('chapterContent');
-                const book = bibleData[bookKey];
-                if (!chapterContent || !book || !book.chapters) {
-                    if (chapterContent) chapterContent.innerHTML = '<p>Livro ou capítulo não encontrado.</p>';
-                    return;
-                };
+            document.getElementById('querigma').innerHTML = `<div id="querigmaContainer" class="p-6 bg-white rounded-lg shadow"><div id="querigmaPrincipalText" class="space-y-4">
+                <h2 class="text-3xl font-bold text-amber-900 mb-6 text-center">Querigma: As Verdades Fundamentais dos Evangelhos</h2>
+                <div class="space-y-6 text-lg text-stone-700">
+                    <p>Queridos irmãos e irmãs,</p>
+                    <p>
+                        O Querigma é o anúncio central e essencial da Boa Nova cristã. É a proclamação que, partindo do amor infinito de Deus Pai que nos criou para a comunhão, revela a trágica realidade do pecado original que nos separou Dele. Contudo, esse mesmo amor impulsionou o Pai a enviar seu Filho Unigênito, Jesus Cristo, que, por sua vida, morte e ressurreição, operou a nossa redenção e a remissão dos pecados. Pelo dom do Espírito Santo, derramado sobre a Igreja (a comunidade dos crentes), somos capacitados a viver uma nova vida em Cristo, marcados pelo serviço e pelo amor fraterno, e enviados a proclamar essa mesma Boa Nova a todos os povos, na certeza da vida eterna e da presença contínua do Senhor. Apropriar-se verdadeiramente deste Querigma significa acolhê-lo não apenas como uma doutrina, mas como uma verdade viva que nos liberta e nos transforma. Isso nos convida a uma entrega mais profunda, a um relacionamento íntimo com Deus, onde a oração se torna um diálogo constante, a vida em comunidade se fortalece no amor e o serviço ao próximo se torna o reflexo do amor de Cristo. Ao viver o Querigma, permitimos que a graça divina nos conduza a uma experiência maior e mais autêntica com Deus, impactando cada aspecto de nossa existência com a alegria e a paz do Evangelho.
+                    </p>
+                    <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">1. O Amor Louco de Deus Pai e a Tragédia do Pecado Original</h3>
+                    <p>Desde o Gênesis, vemos um Deus que é puro amor e que nos criou à Sua imagem e semelhança, para a comunhão. Mas o pecado, a desobediência de Adão e Eva, quebrou essa harmonia original, introduzindo a dor, a vergonha e a morte no mundo. Contudo, mesmo nesse momento de queda, o coração do Pai não se fechou. Pelo contrário, Ele fez a primeira promessa de um Redentor (o Protoevangelho em Gênesis 3,15). Os Evangelhos são a concretização dessa promessa: eles nos revelam o rosto de um Pai que nunca desistiu de nós, que nos amou tanto que "deu o seu Filho unigênito" (João 3,16).</p>
+                    <p class="italic"><strong>Reflexão e Aplicação:</strong> Reconhecer o amor incondicional do Pai é o ponto de partida de tudo. Nossa resposta cotidiana é de <strong class="text-red-700">ADMIRAÇÃO</strong> por esse amor que nos precede, mesmo em nosso estado de pecado, e de <strong class="text-red-700">ARREPENDIMENTO</strong> genuíno pelas vezes que O ofendemos, buscando a Reconciliação com Ele.</p>
+                    <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">2. O Envio do Filho para a Remissão dos Pecados e a Promessa de Vida Eterna</h3>
+                    <p>É aqui que a Boa Nova brilha mais forte. Jesus Cristo, o Filho eterno, o Verbo que se fez carne, foi enviado pelo Pai precisamente para nos resgatar da escravidão do pecado e da morte. Todos os Evangelhos culminam na Paixão, Morte e Ressurreição de Jesus. Ele não veio para ser servido, mas para servir e dar a sua vida "em resgate por muitos" (Marcos 10,45). Pelo seu sangue derramado na cruz, Ele nos oferece a remissão completa dos pecados e a promessa inabalável da vida eterna. João é claro: "Quem crê no Filho tem a vida eterna" (Jo 3,36). Sua ressurreição é a nossa garantia de que a morte foi vencida e que a nova vida em Cristo é real e acessível.</p>
+                    <p class="italic"><strong>Reflexão e Aplicação:</strong> As promessas divinas são o motor da nossa esperança. Elas nos garantem que não estamos sozinhos na jornada.<ul class="list-disc list-inside ml-4 space-y-1 text-green-700"><li><strong class="font-bold">Confiança na Providência:</strong> Saber que Jesus está conosco em todas as circunstâncias, mesmo nas mais difíceis. Isso nos dá paz para enfrentar os desafios.</li><li><strong class="font-bold">Poder para a Missão:</strong> O Espírito Santo, prometido e derramado, nos capacita a viver o Evangelho e a ser testemunhas eficazes. Invocar o Espírito antes de qualquer tarefa e buscar Sua guia.</li><li><strong class="font-bold">Esperança da Vida Eterna:</strong> A certeza de que a vida em Cristo é eterna e plena, e que a morte não tem a última palavra. Isso nos liberta do medo e nos impulsiona a viver para o que realmente importa.</li></ul></p>
+                    <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">3. O Dom do Espírito Santo e a Vida em Comunidade (Igreja)</h3>
+                    <p>Jesus não nos deixou órfãos. Ele prometeu e enviou o Espírito Santo, o Paráclito, que nos guia à toda a verdade, nos recorda os ensinamentos de Cristo e nos capacita para a missão (João 14,16; 16,13). O livro de Atos, continuação do Evangelho de Lucas, mostra o Espírito como o grande protagonista que impulsiona o nascimento e a expansão da Igreja. É no Espírito que a vida em comunidade se torna possível: os discípulos são "um só coração e uma só alma" (Atos 4,32), partilham os bens e perseveram na doutrina dos apóstolos, na comunhão fraterna, na fração do pão e nas orações (Atos 2,42). Esta vida comunitária é um sinal visível do Reino, onde o amor mútuo é a marca distintiva dos discípulos (João 13,35).</p>
+                    <p class="italic"><strong>Reflexão e Aplicação:</strong> Estes princípios são o DNA do discipulado cristão. Viver por eles é viver em conformidade com o coração de Cristo.<ul class="list-disc list-inside ml-4 space-y-1 text-blue-700"><li><strong class="font-bold">Docilidade ao Espírito:</strong> Abrir-nos à ação do Espírito Santo em nossas vidas, buscando Sua guia na oração e na vida diária, para dar os frutos que Ele gera (Gálatas 5,22-23).</li><li><strong class="font-bold">Compromisso Comunitário:</strong> Reconhecer a Igreja como a família de Deus, o corpo de Cristo, onde crescemos na fé e nos amamos uns aos outros. Participar ativamente da vida paroquial e dos movimentos e pastorais.</li><li><strong class="font-bold">Testemunho e Missão:</strong> Ser instrumentos do amor de Deus para o mundo, anunciando a Boa Nova com a vida e com a palavra, como os primeiros apóstolos.</li></ul></p>
+                    <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">4. A Grande Ordem Final: "Ide por Todo o Mundo!"</h3>
+                    <p>Com a ressurreição, vem a Grande Comissão. Jesus envia seus discípulos: "Ide, pois, e fazei discípulos de todas as nações, batizando-os em nome do Pai, e do Filho, e do Espírito Santo; ensinando-os a guardar todas as coisas que eu vos tenho mandado" (Mateus 28,19-20). Marcos (16,15) ecoa: "Ide por todo o mundo, pregai o evangelho a toda criatura." Essa ordem é um convite a ser um discípulo missionário, a não reter para si a alegria da salvação.</p>
+                    <p class="italic"><strong>Aplicação Cotidiana:</strong> Esta é a <strong class="text-red-700">ORDEM</strong> que nos impulsiona para fora de nós mesmos:<ul class="list-disc list-inside ml-4 space-y-1 text-red-700"><li><strong class="font-bold">Anúncio Profético:</strong> Não ter medo de proclamar o Querigma em nossos ambientes (família, trabalho, escola), não com palavras vazias, mas com a autoridade de uma vida transformada.</li><li><strong class="font-bold">Serviço ao Próximo:</strong> Viver a caridade, especialmente para com os marginalizados e necessitados, pois no serviço aos "mínimos" é a Cristo que servimos (Mateus 25,40).</li><li><strong class="font-bold">Discipulado Contínuo:</strong> A missão exige que continuemos a aprender e a crescer na fé, para que possamos ensinar e guiar outros.</li></ul></p>
+                    <p class="mt-8">Que estas ordens, promessas e princípios, comuns a todos os relatos evangélicos, nos inspirem a viver uma fé mais autêntica e corajosa, revelando o rosto de Cristo ao mundo em nossa vida diária. Amém.</p>
+                </div>
+            </div>${generateAudioControls('Querigma')}</div>`;
+            document.getElementById('resumoLivros').innerHTML = `<div class="p-6 bg-white rounded-lg shadow"><div class="flex flex-col sm:flex-row gap-4 items-center mb-6"><label for="bookSelect" class="font-semibold">Livro:</label><select id="bookSelect" class="flex-grow ${selectClasses}"></select></div><div id="bookContent" class="mt-4"></div>${generateAudioControls('Book')}${generateAudioControls('BookMarathon', true)}</div>`;
+            document.getElementById('explorarCapitulos').innerHTML = `<div class="p-6 bg-white rounded-lg shadow"><div class="flex flex-col sm:flex-row gap-4 items-center mb-6"><label for="chapterBookSelect" class="font-semibold">Livro:</label><select id="chapterBookSelect" class="flex-grow ${selectClasses}"></select><label for="chapterSelect" class="font-semibold">Capítulo:</label><select id="chapterSelect" class="flex-grow ${selectClasses}"></select></div><div id="chapterContent" class="mt-4"></div>${generateAudioControls('Chapter')}${generateAudioControls('ChapterMarathon', true)}</div>`;
+            document.getElementById('personagens').innerHTML = `<div class="p-6 bg-white rounded-lg shadow"><div class="flex flex-col sm:flex-row gap-4 items-center mb-6"><label for="charBookSelect" class="font-semibold">Livro:</label><select id="charBookSelect" class="flex-grow ${selectClasses}"></select><label for="characterSelect" class="font-semibold">Personagem:</label><select id="characterSelect" class="flex-grow ${selectClasses}"></select></div><div id="characterContent" class="mt-4"></div>${generateAudioControls('Char')}${generateAudioControls('CharMarathon', true)}</div>`;
+            document.getElementById('analiseTematica').innerHTML = `<div class="p-6 bg-white rounded-lg shadow"><div class="flex flex-col sm:flex-row gap-4 items-center mb-6"><label for="analysisFilterSelect" class="font-semibold">Filtrar por Livro:</label><select id="analysisFilterSelect" class="flex-grow ${selectClasses}"></select></div><div class="chart-container"><canvas id="themesChart"></canvas></div></div>`;
+        }
+        
+        function updateAllContent() {
+            document.getElementById('ordinationSelect').value = appState.ordination;
+            document.getElementById('languageSelect').value = appState.currentLanguage;
+            populateAllBookSelects();
+            populateAnalysisFilter();
+            populateChapterSelect(appState.selectedChapterBook);
+            populateCharacterSelect(appState.selectedCharBook);
+            renderBookSummary(appState.selectedBook);
+            renderChapter(appState.selectedChapterBook, appState.selectedChapter);
+            renderCharacter(appState.selectedCharBook, appState.selectedCharacter);
+            renderComparisonGrid();
+            renderThemesChart(appState.analysisFilter);
+        }
 
-                const chapterData = book.chapters.find(c => c.chapter == chapterNumber);
-                if (!chapterData) {
-                    chapterContent.innerHTML = '<p>Selecione um capítulo.</p>';
-                    return;
-                };
+        function render() {
+            views.forEach(view => view.classList.add('hidden'));
+            document.getElementById(appState.currentView)?.classList.remove('hidden');
+            navButtons.forEach(button => button.classList.toggle('active', button.dataset.view === appState.currentView));
+            if (appState.currentView === 'analiseTematica') renderThemesChart(appState.analysisFilter);
+        }
+        
+        function getCurrentBookOrder() { return appState.ordination === 'jonasAbib' ? ORDER_JONAS_ABIB : ORDER_AVE_MARIA; }
+        function populateBookSelect(selector, selectedValue) { if (!selector) return; selector.innerHTML = ''; getCurrentBookOrder().forEach(key => { const option = document.createElement('option'); option.value = key; option.textContent = bibleData[key].name; selector.appendChild(option); }); selector.value = selectedValue; }
+        function populateAllBookSelects() { populateBookSelect(document.getElementById('bookSelect'), appState.selectedBook); populateBookSelect(document.getElementById('chapterBookSelect'), appState.selectedChapterBook); populateBookSelect(document.getElementById('charBookSelect'), appState.selectedCharBook); }
+        function populateAnalysisFilter() { const select = document.getElementById('analysisFilterSelect'); if(!select) return; select.innerHTML = '<option value="geral">Geral (Todos os Livros)</option>'; getCurrentBookOrder().forEach(key => { const option = document.createElement('option'); option.value = key; option.textContent = bibleData[key].name; select.appendChild(option); }); select.value = appState.analysisFilter; }
+        
+        function populateChapterSelect(bookKey) {
+            const select = document.getElementById('chapterSelect'); if (!select) return; select.innerHTML = '';
+            const book = bibleData[bookKey];
+            if (!book?.chapters?.length) { select.innerHTML = '<option value="">Sem capítulos</option>'; appState.selectedChapter = null; renderChapter(bookKey, null); return; }
+            book.chapters.forEach(c => { const opt = document.createElement('option'); opt.value = c.chapter; opt.textContent = `Capítulo ${c.chapter}: ${c.title}`; select.appendChild(opt); });
+            select.value = appState.selectedChapter && book.chapters.some(c => c.chapter == appState.selectedChapter) ? appState.selectedChapter : book.chapters[0].chapter;
+            appState.selectedChapter = select.value;
+        }
 
-                let contentHTML = `<h3 class="text-2xl font-bold text-amber-900 mb-2">${book.name} - Capítulo ${chapterData.chapter}: ${chapterData.title}</h3><div class="space-y-6 mt-4">`;
+        function populateCharacterSelect(bookKey) {
+            const select = document.getElementById('characterSelect'); if (!select) return; select.innerHTML = '';
+            const book = bibleData[bookKey];
+            if (book?.characters?.length) {
+                book.characters.forEach(c => { const opt = document.createElement('option'); opt.value = c.name; opt.textContent = c.name; select.appendChild(opt); });
+                const defaultChar = book.characters[0].name;
+                select.value = appState.selectedCharacter || defaultChar;
+                if (!appState.selectedCharacter) appState.selectedCharacter = defaultChar;
+            } else { select.innerHTML = '<option value="">Sem personagens</option>'; appState.selectedCharacter = null; }
+            renderCharacter(bookKey, appState.selectedCharacter);
+        }
 
-                if (chapterData.orders && chapterData.orders.length > 0) {
-                    contentHTML += `<div><h4 class="text-xl font-semibold text-red-800 mb-2 border-b-2 border-red-200 pb-1">Ordens</h4><ul class="list-disc list-inside space-y-2 text-red-700">`;
-                    chapterData.orders.forEach(item => contentHTML += `<li>${item}</li>`);
-                    contentHTML += `</ul></div>`;
-                }
+        function renderBookSummary(bookKey) { const book = bibleData[bookKey]; const content = document.getElementById('bookContent'); if (!book || !content) return; content.innerHTML = `<div class="mb-6"><h3 class="text-2xl font-bold text-amber-900 mb-4">Resumo Geral de ${book.name}</h3><div class="space-y-4 text-stone-700"><p>${book.summary}</p></div></div><div>${book.homily}</div>`; if (!bookMarathonState.isPlaying) resetAudioState('Book'); }
+        function renderChapter(bookKey, chapterNumber) { const content = document.getElementById('chapterContent'); if (!content) return; const chapter = bibleData[bookKey]?.chapters?.find(c => c.chapter == chapterNumber); if (!chapter) { content.innerHTML = '<p class="text-center text-stone-500">Selecione um capítulo.</p>'; resetAudioState('Chapter'); return; } let html = `<h3 class="text-2xl font-bold text-amber-900 mb-2">${bibleData[bookKey].name} - Capítulo ${chapter.chapter}: ${chapter.title}</h3><div class="space-y-6 mt-4">`; const cats = { orders: { title: "Ordens", color: "red", items: chapter.orders }, promises: { title: "Promessas", color: "green", items: chapter.promises }, principles: { title: "Princípios", color: "blue", items: chapter.principles } }; for(const key in cats) { const cat = cats[key]; if (cat.items?.length) { html += `<div><h4 class="text-xl font-semibold text-${cat.color}-800 mb-2 border-b-2 border-${cat.color}-200 pb-1">${cat.title}</h4><ul class="list-disc list-inside space-y-2 text-${cat.color}-700">`; cat.items.forEach(item => html += `<li>${item}</li>`); html += `</ul></div>`; } } content.innerHTML = html + `</div>`; if (!chapterMarathonState.isPlaying) resetAudioState('Chapter'); }
+        function renderCharacter(bookKey, charName) { const content = document.getElementById('characterContent'); if (!content) return; const char = bibleData[bookKey]?.characters?.find(c => c.name === charName); if(!charName || !char) { content.innerHTML = '<p class="text-center text-stone-500">Selecione um personagem.</p>'; if (!charMarathonState.isPlaying) resetAudioState('Char'); return; } content.innerHTML = `<h3 class="text-2xl font-bold text-amber-900 mb-4 text-center">${char.name}</h3><p class="text-stone-700 text-lg">${char.summary}</p>`; if (!charMarathonState.isPlaying) resetAudioState('Char'); }
+function renderComparisonGrid() {
+        const view = document.getElementById('comparacaoEvangelhos');
+        if (!view) return;
 
-                if (chapterData.promises && chapterData.promises.length > 0) {
-                    contentHTML += `<div><h4 class="text-xl font-semibold text-green-800 mb-2 border-b-2 border-green-200 pb-1">Promessas</h4><ul class="list-disc list-inside space-y-2 text-green-700">`;
-                    chapterData.promises.forEach(item => contentHTML += `<li>${item}</li>`);
-                    contentHTML += `</ul></div>`;
-                }
+        // Lista fixa apenas com os quatro evangelhos
+        const gospelOrder = ['mateus', 'marcos', 'lucas', 'joao'];
+        let data = {};
 
-                if (chapterData.principles && chapterData.principles.length > 0) {
-                    contentHTML += `<div><h4 class="text-xl font-semibold text-blue-800 mb-2 border-b-2 border-blue-200 pb-1">Princípios</h4><ul class="list-disc list-inside space-y-2 text-blue-700">`;
-                    chapterData.principles.forEach(item => contentHTML += `<li>${item}</li>`);
-                    contentHTML += `</ul></div>`;
-                }
-                
-                contentHTML += `</div>`;
-                chapterContent.innerHTML = contentHTML;
-                 if (!chapterMarathonState.isPlaying) {
-                    resetAudioState('Chapter');
-                }
-            }
-
-            function renderCharacter(bookKey, charName) {
-                const characterContent = document.getElementById('characterContent');
-                if (!characterContent) return;
-                
-                if(!charName) {
-                    characterContent.innerHTML = '<p class="text-center text-stone-500">Selecione um livro e um personagem para ver um resumo sobre ele.</p>';
-                    if (!charMarathonState.isPlaying) resetAudioState('Char');
-                    return;
-                }
-                const book = bibleData[bookKey];
-                const characterData = book && book.characters ? book.characters.find(c => c.name === charName) : null;
-                if (!characterData) {
-                    characterContent.innerHTML = '<p class="text-center text-stone-500">Personagem não encontrado.</p>';
-                    return;
-                };
-                
-                let contentHTML = `
-                    <h3 class="text-2xl font-bold text-amber-900 mb-4 text-center">${characterData.name}</h3>
-                    <p class="text-stone-700 text-lg">${characterData.summary}</p>
-                `;
-                characterContent.innerHTML = contentHTML;
-
-                if (!charMarathonState.isPlaying) {
-                    resetAudioState('Char');
-                }
-            }
-
-             function renderComparisonGrid() {
-                const comparisonView = document.getElementById('comparacaoEvangelhos');
-                if (!comparisonView) return;
-
-                const gospelOrder = ['joao', 'marcos', 'lucas', 'mateus'];
-                let allData = {}; // Objeto para guardar todos os dados extraídos
-
-                // 1. Primeiro, extraímos todos os dados
-                gospelOrder.forEach(key => {
-                    const book = bibleData[key];
-                    allData[key] = {
-                        name: book ? book.name : 'N/A',
-                        orders: [],
-                        promises: [],
-                        principles: []
-                    };
-                    if (book && book.chapters) {
-                        book.chapters.forEach(chapter => {
-                            if (chapter.orders) allData[key].orders.push(...chapter.orders);
-                            if (chapter.promises) allData[key].promises.push(...chapter.promises);
-                            if (chapter.principles) allData[key].principles.push(...chapter.principles);
-                        });
-                    }
-                });
-
-                let html = '';
-
-                // 2. Construir a seção de "Ordens"
-                html += `<div class="mb-12">`;
-                html += `<h3 class="text-3xl font-bold text-red-800 mb-4 text-center">Ordens</h3>`;
-                html += `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">`;
-                gospelOrder.forEach(key => {
-                    html += `<div class="bg-white rounded-xl shadow-md p-4 h-full">`; // h-full para alinhar
-                    html += `<h4 class="text-xl font-semibold text-amber-900 mb-3 text-center border-b border-amber-200 pb-2">${allData[key].name}</h4>`;
-                    if (allData[key].orders.length > 0) {
-                        html += `<ul class="list-disc list-inside space-y-2 text-red-700 text-sm">`;
-                        allData[key].orders.forEach(item => { html += `<li>${item}</li>`; });
-                        html += `</ul>`;
-                    } else {
-                        html += `<p class="text-sm text-stone-500 italic">Nenhuma ordem listada.</p>`;
-                    }
-                    html += `</div>`;
-                });
-                html += `</div></div>`;
-
-                // 3. Construir a seção de "Promessas"
-                html += `<div class="mb-12">`;
-                html += `<h3 class="text-3xl font-bold text-green-800 mb-4 text-center">Promessas</h3>`;
-                html += `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">`;
-                gospelOrder.forEach(key => {
-                    html += `<div class="bg-white rounded-xl shadow-md p-4 h-full">`; // h-full para alinhar
-                    html += `<h4 class="text-xl font-semibold text-amber-900 mb-3 text-center border-b border-amber-200 pb-2">${allData[key].name}</h4>`;
-                    if (allData[key].promises.length > 0) {
-                        html += `<ul class="list-disc list-inside space-y-2 text-green-700 text-sm">`;
-                        allData[key].promises.forEach(item => { html += `<li>${item}</li>`; });
-                        html += `</ul>`;
-                    } else {
-                        html += `<p class="text-sm text-stone-500 italic">Nenhuma promessa listada.</p>`;
-                    }
-                    html += `</div>`;
-                });
-                html += `</div></div>`;
-
-                // 4. Construir a seção de "Princípios"
-                html += `<div>`; // Removido mb-12 do último bloco
-                html += `<h3 class="text-3xl font-bold text-blue-800 mb-4 text-center">Princípios</h3>`;
-                html += `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">`;
-                gospelOrder.forEach(key => {
-                    html += `<div class="bg-white rounded-xl shadow-md p-4 h-full">`; // h-full para alinhar
-                    html += `<h4 class="text-xl font-semibold text-amber-900 mb-3 text-center border-b border-amber-200 pb-2">${allData[key].name}</h4>`;
-                    if (allData[key].principles.length > 0) {
-                        html += `<ul class="list-disc list-inside space-y-2 text-blue-700 text-sm">`;
-                        allData[key].principles.forEach(item => { html += `<li>${item}</li>`; });
-                        html += `</ul>`;
-                    } else {
-                        html += `<p class="text-sm text-stone-500 italic">Nenhum princípio listado.</p>`;
-                    }
-                    html += `</div>`;
-                });
-                html += `</div></div>`;
-
-                comparisonView.innerHTML = html;
-            }
-
-            function renderThemesChart(filterKey) {
-                const ctx = document.getElementById('themesChart').getContext('2d');
-                if (themesChartInstance) {
-                    themesChartInstance.destroy();
-                }
-
-                const totals = { orders: 0, promises: 0, principles: 0 };
-                let chartTitle = 'Ocorrências por Categoria';
-
-                const booksToAnalyze = (filterKey === 'geral') 
-                    ? Object.values(bibleData) 
-                    : [bibleData[filterKey]].filter(Boolean);
-                
-                if (booksToAnalyze.length === 0) return;
-
-                const bookNames = (filterKey === 'geral')
-                    ? 'Geral (Todos os Livros)'
-                    : (bibleData[filterKey] ? bibleData[filterKey].name : 'Desconhecido');
-                
-                chartTitle = `${chartTitle} (${bookNames})`;
-
-                booksToAnalyze.forEach(book => {
-                    if (book && book.chapters) {
-                        book.chapters.forEach(chapter => {
-                            totals.orders += (chapter.orders || []).length;
-                            totals.promises += (chapter.promises || []).length;
-                            totals.principles += (chapter.principles || []).length;
-                        });
-                    }
-                });
-
-                themesChartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Ordens', 'Promessas', 'Princípios'],
-                        datasets: [{
-                            label: 'Contagem Total de Temas',
-                            data: [totals.orders, totals.promises, totals.principles],
-                            backgroundColor: ['rgba(199, 58, 58, 0.6)','rgba(22, 163, 74, 0.6)','rgba(37, 99, 235, 0.6)'],
-                            borderColor: ['rgba(199, 58, 58, 1)','rgba(22, 163, 74, 1)','rgba(37, 99, 235, 1)'],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: { y: { beginAtZero: true } },
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: true, text: chartTitle, font: { size: 16 } }
-                        }
-                    }
+        gospelOrder.forEach(key => {
+            const book = bibleData[key];
+            if (book) { // Garante que o livro existe nos dados
+                data[key] = { name: book.name, orders: [], promises: [], principles: [] };
+                book.chapters.forEach(c => {
+                    data[key].orders.push(...(c.orders || []));
+                    data[key].promises.push(...(c.promises || []));
+                    data[key].principles.push(...(c.principles || []));
                 });
             }
-
-            function generateBookAudioText(bookKey) {
-                const book = bibleData[bookKey];
-                if(!book) return "Livro não encontrado.";
-                const principalCharacters = book.characters ? book.characters.map(c => c.name).join(', ') : 'nenhum personagem principal listado';
-                const cleanHomily = book.homily ? book.homily.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim() : '';
-                return `Bem-vindo ao nosso podcast de estudo bíblico. Hoje, vamos mergulhar no livro de ${book.name}. ${book.summary}. Neste livro, encontramos figuras marcantes como ${principalCharacters}. A seguir, uma breve reflexão sobre seus ensinamentos: ${cleanHomily}`;
-            }
-             
-            function generateChapterAudioText(bookKey, chapterNumber) {
-                const book = bibleData[bookKey];
-                if (!book || !book.chapters) return "Capítulo não encontrado.";
-                const chapter = book.chapters.find(c => c.chapter == chapterNumber);
-                if (!chapter) return "Capítulo não encontrado.";
-
-                let text = `Resumo do livro de ${book.name}, capítulo ${chapter.chapter}: ${chapter.title}. `;
-                
-                if (chapter.orders && chapter.orders.length > 0) {
-                    text += "As ordens neste capítulo são: " + chapter.orders.map(o => o.split('(')[0].trim()).join('. ') + ". ";
-                }
-                if (chapter.promises && chapter.promises.length > 0) {
-                     text += "As promessas são: " + chapter.promises.map(p => p.split('(')[0].trim()).join('. ') + ". ";
-                }
-                if (chapter.principles && chapter.principles.length > 0) {
-                     text += "E os princípios eternos que aprendemos são: " + chapter.principles.map(p => p.split('(')[0].trim()).join('. ') + ".";
-                }
-                return text;
-            }
-
-            function generateCharacterAudioText(bookKey, charName) {
-                if(!charName) return "Nenhum personagem selecionado.";
-                const book = bibleData[bookKey];
-                if (!book || !book.characters) return "Personagem não encontrado.";
-                const characterData = book.characters.find(c => c.name === charName);
-                if (!characterData) return "Personagem não encontrado.";
-                return `Um resumo sobre ${characterData.name}: ${characterData.summary}`;
-            }
-
-            function updateAudioButtons(type, isPlaying, isPaused = false) {
-                const playBtn = document.getElementById(`playAudioBtn${type}`);
-                const pauseBtn = document.getElementById(`pauseAudioBtn${type}`);
-                const resumeBtn = document.getElementById(`resumeAudioBtn${type}`);
-                const stopBtn = document.getElementById(`stopAudioBtn${type}`);
-                
-                if(playBtn) playBtn.classList.toggle('hidden', isPlaying || isPaused);
-                if(pauseBtn) pauseBtn.classList.toggle('hidden', !isPlaying || isPaused);
-                if(resumeBtn) resumeBtn.classList.toggle('hidden', !isPaused);
-                if(stopBtn) stopBtn.classList.toggle('hidden', !isPlaying && !isPaused);
-            }
-
-            function getSpeedButtonClass(type) {
-                const map = {
-                    'Book': 'speed-btn-book', 'BookMarathon': 'speed-btn-book-marathon',
-                    'Chapter': 'speed-btn-chapter', 'ChapterMarathon': 'speed-btn-chapter-marathon',
-                    'Char': 'speed-btn-char', 'CharMarathon': 'speed-btn-char-marathon'
-                };
-                return map[type];
-            }
-            
-            function resetAudioState(type) {
-                if ( (type.includes('Marathon')) || (currentSpeech && !bookMarathonState.isPlaying && !chapterMarathonState.isPlaying && !charMarathonState.isPlaying) ) {
-                     speechSynthesis.cancel();
-                }
-                
-                if (type === 'BookMarathon') bookMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
-                if (type === 'ChapterMarathon') chapterMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
-                if (type === 'CharMarathon') charMarathonState = { isPlaying: false, isPaused: false, currentIndex: 0, utterance: null };
-                
-                updateAudioButtons(type, false);
-                const statusEl = document.getElementById(`audioStatus${type}`);
-                if(statusEl) statusEl.textContent = "";
-                
-                const speedBtnClass = getSpeedButtonClass(type);
-                if (speedBtnClass) {
-                    const speedBtns = document.querySelectorAll(`.${speedBtnClass}`);
-                    speedBtns.forEach(btn => {
-                        btn.classList.remove('active');
-                        btn.classList.remove('bg-blue-600');
-                        btn.classList.remove('text-white');
-                        btn.classList.add('bg-gray-200', 'text-gray-800');
-                        if (btn.dataset.speed === "1") {
-                            btn.classList.add('active');
-                            btn.classList.remove('bg-gray-200', 'text-gray-800');
-                        }
-                    });
-                }
-            }
-            
-            function setupMarathonAudioHandler(type, state, config) {
-                const { playBtnId, pauseBtnId, resumeBtnId, stopBtnId, statusId, speedBtnClass, nextFunction, textGenerator, itemNameSelector, marathonName } = config;
-
-                const playBtn = document.getElementById(playBtnId);
-                const pauseBtn = document.getElementById(pauseBtnId);
-                const resumeBtn = document.getElementById(resumeBtnId);
-                const stopBtn = document.getElementById(stopBtnId);
-                const statusEl = document.getElementById(statusId);
-                const speedBtns = document.querySelectorAll(`.${speedBtnClass}`);
-
-                function playNext() {
-                    const items = nextFunction();
-                    if (state.currentIndex >= items.length) {
-                        resetAudioState(type);
-                        if(statusEl) statusEl.textContent = `Maratona de ${marathonName} concluída!`;
-                        return;
-                    }
-                    const currentItem = items[state.currentIndex];
-                    config.updateUI(currentItem);
-
-                    const textToSpeak = textGenerator(currentItem);
-                    if (!textToSpeak) {
-                        state.currentIndex++;
-                        playNext();
-                        return;
-                    }
-                    
-                    const activeSpeedBtn = document.querySelector(`.${speedBtnClass}.active`);
-                    const currentRate = activeSpeedBtn ? parseFloat(activeSpeedBtn.dataset.speed) : 1;
-                    
-                    state.utterance = new SpeechSynthesisUtterance(textToSpeak);
-                    state.utterance.lang = 'pt-BR';
-                    state.utterance.rate = currentRate;
-
-                    state.utterance.onstart = () => {
-                        state.isPlaying = true;
-                        state.isPaused = false;
-                        updateAudioButtons(type, true, false);
-                        if(statusEl) statusEl.textContent = `Reproduzindo: ${itemNameSelector(currentItem)}...`;
-                    };
-
-                    state.utterance.onend = () => {
-                        state.currentIndex++;
-                        playNext();
-                    };
-                    speechSynthesis.speak(state.utterance);
-                }
-
-                playBtn.addEventListener('click', () => {
-                    if (speechSynthesis.speaking) speechSynthesis.cancel();
-                    state.isPlaying = true;
-                    state.currentIndex = 0; 
-                    playNext();
-                });
-                pauseBtn.addEventListener('click', () => {
-                    if (speechSynthesis.speaking) {
-                        speechSynthesis.pause();
-                        state.isPaused = true;
-                        updateAudioButtons(type, true, true);
-                        if(statusEl) statusEl.textContent = "Maratona pausada.";
-                    }
-                });
-                resumeBtn.addEventListener('click', () => {
-                    if (speechSynthesis.paused) {
-                        speechSynthesis.resume();
-                        state.isPaused = false;
-                        updateAudioButtons(type, true, false);
-                        if(statusEl) statusEl.textContent = `Reproduzindo...`;
-                    }
-                });
-                stopBtn.addEventListener('click', () => resetAudioState(type));
-                speedBtns.forEach(button => {
-                    button.addEventListener('click', () => {
-                        speedBtns.forEach(btn => {
-                            btn.classList.remove('active');
-                            btn.classList.add('bg-gray-200', 'text-gray-800');
-                        });
-                        button.classList.add('active');
-                        button.classList.remove('bg-gray-200', 'text-gray-800');
-                        
-                        if (speechSynthesis.speaking && state.isPlaying && !state.isPaused) {
-                            speechSynthesis.cancel();
-                            playNext();
-                        }
-                    });
-                });
-            }
-
-            function setupBookMarathonAudioHandler() {
-                setupMarathonAudioHandler('BookMarathon', bookMarathonState, {
-                    playBtnId: 'playAudioBtnBookMarathon', pauseBtnId: 'pauseAudioBtnBookMarathon', resumeBtnId: 'resumeAudioBtnBookMarathon', stopBtnId: 'stopAudioBtnBookMarathon', statusId: 'audioStatusBookMarathon', speedBtnClass: 'speed-btn-book-marathon', marathonName: 'livros',
-                    nextFunction: () => getCurrentBookOrder(),
-                    updateUI: (bookKey) => {
-                        appState.selectedBook = bookKey;
-                        document.getElementById('bookSelect').value = bookKey;
-                        renderBookSummary(bookKey);
-                    },
-                    textGenerator: (bookKey) => generateBookAudioText(bookKey),
-                    itemNameSelector: (bookKey) => bibleData[bookKey].name,
-                });
-            }
-
-            function setupChapterMarathonAudioHandler() {
-                setupMarathonAudioHandler('ChapterMarathon', chapterMarathonState, {
-                    playBtnId: 'playAudioBtnChapterMarathon', pauseBtnId: 'pauseAudioBtnChapterMarathon', resumeBtnId: 'resumeAudioBtnChapterMarathon', stopBtnId: 'stopAudioBtnChapterMarathon', statusId: 'audioStatusChapterMarathon', speedBtnClass: 'speed-btn-chapter-marathon', marathonName: 'capítulos',
-                    nextFunction: () => bibleData[appState.selectedChapterBook].chapters,
-                    updateUI: (chapter) => {
-                        appState.selectedChapter = chapter.chapter;
-                        document.getElementById('chapterSelect').value = chapter.chapter;
-                        renderChapter(appState.selectedChapterBook, chapter.chapter);
-                    },
-                    textGenerator: (chapter) => generateChapterAudioText(appState.selectedChapterBook, chapter.chapter),
-                    itemNameSelector: (chapter) => `Capítulo ${chapter.chapter}`,
-                });
-            }
-            
-            function setupCharMarathonAudioHandler() {
-                setupMarathonAudioHandler('CharMarathon', charMarathonState, {
-                    playBtnId: 'playAudioBtnCharMarathon', pauseBtnId: 'pauseAudioBtnCharMarathon', resumeBtnId: 'resumeAudioBtnCharMarathon', stopBtnId: 'stopAudioBtnCharMarathon', statusId: 'audioStatusCharMarathon', speedBtnClass: 'speed-btn-char-marathon', marathonName: 'personagens',
-                    nextFunction: () => bibleData[appState.selectedCharBook].characters || [],
-                    updateUI: (character) => {
-                        appState.selectedCharacter = character.name;
-                        document.getElementById('characterSelect').value = character.name;
-                        renderCharacter(appState.selectedCharBook, character.name);
-                    },
-                    textGenerator: (character) => generateCharacterAudioText(appState.selectedCharBook, character.name),
-                    itemNameSelector: (character) => character.name,
-                });
-            }
-            
-            function setupAudioHandler(type, config) {
-                const { playBtnId, pauseBtnId, resumeBtnId, stopBtnId, statusId, speedBtnClass, textGenerator } = config;
-                
-                const playBtn = document.getElementById(playBtnId);
-                const pauseBtn = document.getElementById(pauseBtnId);
-                const resumeBtn = document.getElementById(resumeBtnId);
-                const stopBtn = document.getElementById(stopBtnId);
-                const statusEl = document.getElementById(statusId);
-                const speedBtns = document.querySelectorAll(`.${speedBtnClass}`);
-
-                playBtn.addEventListener('click', () => {
-                    if (speechSynthesis.speaking) speechSynthesis.cancel();
-                    if (bookMarathonState.isPlaying || chapterMarathonState.isPlaying || charMarathonState.isPlaying) return;
-
-                    const textToSpeak = textGenerator();
-                    if(!textToSpeak || textToSpeak.includes("não encontrado") || textToSpeak.includes("Nenhum personagem")) {
-                        if (statusEl) statusEl.textContent = "Conteúdo indisponível para áudio.";
-                        return;
-                    }
-
-                    const activeSpeedBtn = document.querySelector(`.${speedBtnClass}.active`);
-                    const rate = activeSpeedBtn ? parseFloat(activeSpeedBtn.dataset.speed) : 1;
-
-                    currentSpeech = new SpeechSynthesisUtterance(textToSpeak);
-                    currentSpeech.lang = 'pt-BR';
-                    currentSpeech.rate = rate;
-                    
-                    currentSpeech.onstart = () => {
-                        updateAudioButtons(type, true);
-                        if (statusEl) statusEl.textContent = "Reproduzindo...";
-                    }
-                    currentSpeech.onend = () => {
-                        resetAudioState(type);
-                        currentSpeech = null;
-                    }
-                    
-                    speechSynthesis.speak(currentSpeech);
-                });
-
-                pauseBtn.addEventListener('click', () => {
-                    speechSynthesis.pause();
-                    updateAudioButtons(type, true, true);
-                });
-
-                resumeBtn.addEventListener('click', () => {
-                    speechSynthesis.resume();
-                    updateAudioButtons(type, true, false);
-                });
-                
-                stopBtn.addEventListener('click', () => {
-                   resetAudioState(type);
-                   currentSpeech = null;
-                });
-
-                speedBtns.forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const target = e.currentTarget;
-                        speedBtns.forEach(btn => {
-                            btn.classList.remove('active');
-                            btn.classList.add('bg-gray-200', 'text-gray-800');
-                        });
-                        target.classList.add('active');
-                        target.classList.remove('bg-gray-200', 'text-gray-800');
-                        
-                        if (speechSynthesis.speaking && currentSpeech && !speechSynthesis.paused) {
-                           const text = currentSpeech.text;
-                           const newRate = parseFloat(target.dataset.speed);
-                           speechSynthesis.cancel();
-                           
-                           currentSpeech = new SpeechSynthesisUtterance(text);
-                           currentSpeech.lang = 'pt-BR';
-                           currentSpeech.rate = newRate;
-                           currentSpeech.onstart = () => {
-                                updateAudioButtons(type, true);
-                                if(statusEl) statusEl.textContent = "Reproduzindo...";
-                           }
-                           currentSpeech.onend = () => {
-                                resetAudioState(type);
-                                currentSpeech = null;
-                           }
-                           speechSynthesis.speak(currentSpeech);
-                        }
-                    });
-                });
-            }
-            
-            function updateAllContent() {
-                populateAllBookSelects();
-                populateAnalysisFilter();
-                
-                populateChapterSelect(appState.selectedChapterBook);
-                populateCharacterSelect(appState.selectedCharBook);
-                
-                renderBookSummary(appState.selectedBook);
-                renderChapter(appState.selectedChapterBook, appState.selectedChapter);
-                renderCharacter(appState.selectedCharBook, appState.selectedCharacter);
-                renderComparisonGrid();
-                renderThemesChart(appState.analysisFilter);
-            }
-
-            function render() {
-                views.forEach(view => {
-                    view.classList.add('hidden');
-                });
-                document.getElementById(appState.currentView).classList.remove('hidden');
-
-                navButtons.forEach(button => {
-                    button.classList.remove('active');
-                    if (button.dataset.view === appState.currentView) {
-                        button.classList.add('active');
-                    }
-                });
-
-                if (appState.currentView === 'analiseTematica') {
-                    renderThemesChart(appState.analysisFilter);
-                }
-                if (appState.currentView === 'comparacaoEvangelhos') {
-                    renderComparisonGrid();
-                }
-            }
-            
-            // Event Listeners
-            document.getElementById('ordinationSelect').addEventListener('change', (e) => {
-                appState.ordination = e.target.value;
-                const newFirstBook = getCurrentBookOrder()[0];
-                appState.selectedBook = newFirstBook;
-                appState.selectedChapterBook = newFirstBook;
-                appState.selectedCharBook = newFirstBook;
-                appState.selectedChapter = 1;
-                appState.selectedCharacter = null;
-                appState.analysisFilter = 'geral';
-                updateAllContent();
-            });
-
-            document.getElementById('bookSelect').addEventListener('change', (e) => {
-                resetAudioState('BookMarathon'); resetAudioState('Book');
-                appState.selectedBook = e.target.value;
-                renderBookSummary(appState.selectedBook);
-            });
-
-            document.getElementById('chapterBookSelect').addEventListener('change', (e) => {
-                resetAudioState('ChapterMarathon'); resetAudioState('Chapter');
-                appState.selectedChapterBook = e.target.value;
-                appState.selectedChapter = 1;
-                populateChapterSelect(appState.selectedChapterBook);
-                renderChapter(appState.selectedChapterBook, appState.selectedChapter);
-            });
-
-            document.getElementById('chapterSelect').addEventListener('change', (e) => {
-                resetAudioState('ChapterMarathon'); resetAudioState('Chapter');
-                appState.selectedChapter = e.target.value;
-                renderChapter(appState.selectedChapterBook, appState.selectedChapter);
-            });
-
-            document.getElementById('charBookSelect').addEventListener('change', (e) => {
-                resetAudioState('CharMarathon'); resetAudioState('Char');
-                appState.selectedCharBook = e.target.value;
-                appState.selectedCharacter = null;
-                populateCharacterSelect(appState.selectedCharBook);
-                renderCharacter(appState.selectedCharBook, null);
-            });
-
-            document.getElementById('characterSelect').addEventListener('change', (e) => {
-                resetAudioState('CharMarathon'); resetAudioState('Char');
-                appState.selectedCharacter = e.target.value;
-                renderCharacter(appState.selectedCharBook, e.target.value);
-            });
-
-            document.getElementById('analysisFilterSelect').addEventListener('change', (e) => {
-                appState.analysisFilter = e.target.value;
-                renderThemesChart(appState.analysisFilter);
-            });
-
-            navButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    speechSynthesis.cancel();
-                    ['Book', 'BookMarathon', 'Chapter', 'ChapterMarathon', 'Char', 'CharMarathon'].forEach(resetAudioState);
-                    appState.currentView = button.dataset.view;
-                    render();
-                });
-            });
-
-            init();
         });
+
+        const renderCat = (t, c, dk) => {
+            let h = `<div class="mb-12"><h3 class="text-3xl font-bold text-${c}-800 mb-4 text-center">${t}</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">`;
+            gospelOrder.forEach(k => {
+                if (data[k]) { // Renderiza apenas se o evangelho foi encontrado
+                    h += `<div class="bg-white rounded-xl shadow-md p-4 h-full"><h4 class="text-xl font-semibold text-amber-900 mb-3 text-center border-b border-amber-200 pb-2">${data[k].name}</h4>`;
+                    const items = data[k][dk];
+                    if (items.length) {
+                        h += `<ul class="list-disc list-inside space-y-2 text-${c}-700 text-sm">`;
+                        items.forEach(i => { h += `<li>${i}</li>`; });
+                        h += `</ul>`;
+                    } else {
+                        h += `<p class="text-sm text-stone-500 italic">Nenhum item listado.</p>`;
+                    }
+                    h += `</div>`;
+                }
+            });
+            return h + `</div></div>`;
+        };
+        
+        view.innerHTML = renderCat('Ordens', 'red', 'orders') + renderCat('Promessas', 'green', 'promises') + renderCat('Princípios', 'blue', 'principles');
+    }
+        
+        function renderThemesChart(filterKey) {
+            const canvas = document.getElementById('themesChart');
+            if (!canvas) return;
+            
+            const existingChart = Chart.getChart(canvas);
+            if (existingChart) {
+                existingChart.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+            const totals = { orders: 0, promises: 0, principles: 0 };
+            const books = (filterKey === 'geral') ? getCurrentBookOrder().map(k => bibleData[k]) : [bibleData[filterKey]].filter(Boolean);
+            books.forEach(b => {
+                b.chapters.forEach(c => {
+                    totals.orders += (c.orders || []).length;
+                    totals.promises += (c.promises || []).length;
+                    totals.principles += (c.principles || []).length;
+                });
+            });
+
+            const title = `Ocorrências (${(filterKey === 'geral') ? 'Todos' : bibleData[filterKey]?.name || ''})`;
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ordens', 'Promessas', 'Princípios'],
+                    datasets: [{
+                        label: 'Total',
+                        data: [totals.orders, totals.promises, totals.principles],
+                        backgroundColor: ['rgba(199, 58, 58, 0.6)', 'rgba(22, 163, 74, 0.6)', 'rgba(37, 99, 235, 0.6)'],
+                        borderColor: ['rgba(199, 58, 58, 1)', 'rgba(22, 163, 74, 1)', 'rgba(37, 99, 235, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, suggestedMax: 10 } },
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: title, font: { size: 16 } }
+                    }
+                }
+            });
+        }
+
+        function startSpeechKeepAlive() { stopSpeechKeepAlive(); speechKeepAliveInterval = setInterval(() => { if (speechSynthesis.speaking) speechSynthesis.resume(); else stopSpeechKeepAlive(); }, 5000); }
+        function stopSpeechKeepAlive() { clearInterval(speechKeepAliveInterval); speechKeepAliveInterval = null; }
+
+        function generateAudioControls(type, isMarathon = false) {
+            const title = isMarathon ? `Ouvir Maratona de ${type.replace('Marathon', '')}` : `Ouvir Resumo de ${type}`;
+            const idSuffix = type;
+            return `<div class="mt-6 p-4 border-t border-amber-200"><h4 class="font-semibold text-lg mb-3">${title}</h4><div class="flex items-center gap-4 flex-wrap"><div class="flex gap-1"><button id="playAudioBtn${idSuffix}" class="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">▶</button><button id="pauseAudioBtn${idSuffix}" class="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-colors hidden">⏸</button><button id="resumeAudioBtn${idSuffix}" class="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors hidden">▶</button><button id="stopAudioBtn${idSuffix}" class="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors hidden">⏹</button></div><div class="flex items-center gap-2"><span class="text-sm font-medium">Velocidade:</span><div class="flex gap-1">${[0.5, 1, 1.25, 1.5, 1.75, 2].map(s => `<button data-speed="${s}" class="speed-btn speed-btn-${idSuffix.toLowerCase()} px-2 py-1 text-xs rounded-md transition-colors ${s === 1 ? 'active bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'}">${s}x</button>`).join('')}</div></div></div><div id="audioStatus${idSuffix}" class="text-sm text-stone-600 mt-2 h-4"></div></div>`;
+        }
+        
+        function generateBookAudioText(bookKey) { const book = bibleData[bookKey]; if(!book) return ""; return `Estudo do livro de ${book.name}. ${book.summary}. Reflexão: ${book.homily.replace(/<[^>]*>?/gm, ' ')}`; }
+        function generateChapterAudioText(bookKey, chapterNumber) { const chapter = bibleData[bookKey]?.chapters?.find(c => c.chapter == chapterNumber); if (!chapter) return ""; let text = `Resumo do capítulo ${chapter.chapter}: ${bibleData[bookKey].name}: ${chapter.title}. `; if (chapter.orders?.length) text += "Ordens: " + chapter.orders.map(o => o.split('(')[0].trim()).join('. ') + ". "; if (chapter.promises?.length) text += "Promessas: " + chapter.promises.map(p => p.split('(')[0].trim()).join('. ') + ". "; if (chapter.principles?.length) text += "Princípios: " + chapter.principles.map(p => p.split('(')[0].trim()).join('. '); return text; }
+        function generateCharacterAudioText(bookKey, charName) { const char = bibleData[bookKey]?.characters?.find(c => c.name === charName); return char ? `Resumo sobre ${char.name}: ${char.summary}` : ""; }
+        function generateQuerigmaAudioText() { return document.getElementById('querigmaPrincipalText')?.textContent.trim() || ""; }
+
+        function updateAudioButtons(type, isPlaying, isPaused = false) {
+            document.getElementById(`playAudioBtn${type}`)?.classList.toggle('hidden', isPlaying || isPaused);
+            document.getElementById(`pauseAudioBtn${type}`)?.classList.toggle('hidden', !isPlaying || isPaused);
+            document.getElementById(`resumeAudioBtn${type}`)?.classList.toggle('hidden', !isPaused);
+            document.getElementById(`stopAudioBtn${type}`)?.classList.toggle('hidden', !isPlaying && !isPaused);
+        }
+        
+        function resetAudioState(type, resetIndex = true) {
+            if (currentSpeech?._type === type) speechSynthesis.cancel();
+            const state = type.includes('Marathon') ? audioConfigs[type].state : null;
+            if (state) { state.isPlaying = false; state.isPaused = false; state.utterance = null; if (resetIndex) state.currentIndex = 0; }
+            updateAudioButtons(type, false, false);
+            const statusEl = document.getElementById(`audioStatus${type}`);
+            if (statusEl) statusEl.textContent = "";
+            setTimeout(() => { if (!speechSynthesis.speaking && !speechSynthesis.pending) stopSpeechKeepAlive(); }, 150);
+        }
+
+        function setupSingleAudioHandler(type) {
+            document.getElementById(`playAudioBtn${type}`)?.addEventListener('click', () => {
+                speechSynthesis.cancel();
+                Object.keys(audioConfigs).forEach(k => resetAudioState(k, false));
+                const text = audioConfigs[type].textGenerator(appState);
+                if (!text) return;
+                const speed = document.querySelector(`.speed-btn-${type.toLowerCase()}.active`)?.dataset.speed || 1;
+                currentSpeech = new SpeechSynthesisUtterance(text);
+                currentSpeech.lang = appState.currentLanguage;
+                currentSpeech.rate = parseFloat(speed);
+                currentSpeech._type = type;
+                currentSpeech.onstart = () => { updateAudioButtons(type, true); document.getElementById(`audioStatus${type}`).textContent = "Reproduzindo..."; startSpeechKeepAlive(); };
+                currentSpeech.onend = () => { stopSpeechKeepAlive(); resetAudioState(type); currentSpeech = null; };
+                currentSpeech.onerror = () => { stopSpeechKeepAlive(); document.getElementById(`audioStatus${type}`).textContent = `Erro ao reproduzir.`; resetAudioState(type); };
+                speechSynthesis.speak(currentSpeech);
+            });
+        }
+        
+        function setupMarathonAudioHandler(type) {
+            const btn = document.getElementById(`playAudioBtn${type}`); if(!btn) return;
+            const config = {
+                'BookMarathon': { state: bookMarathonState, getItems: () => getCurrentBookOrder(), updateUI: (k) => { appState.selectedBook = k; document.getElementById('bookSelect').value = k; renderBookSummary(k); }, itemName: (k) => bibleData[k].name, startIndex: () => getCurrentBookOrder().indexOf(appState.selectedBook) },
+                'ChapterMarathon': { state: chapterMarathonState, getItems: () => bibleData[appState.selectedChapterBook]?.chapters || [], updateUI: (c) => { appState.selectedChapter = c.chapter; document.getElementById('chapterSelect').value = c.chapter; renderChapter(appState.selectedChapterBook, c.chapter); }, itemName: (c) => `Capítulo ${c.chapter}`, startIndex: () => (bibleData[appState.selectedChapterBook]?.chapters || []).findIndex(c => c.chapter == appState.selectedChapter) },
+                'CharMarathon': { state: charMarathonState, getItems: () => bibleData[appState.selectedCharBook]?.characters || [], updateUI: (c) => { appState.selectedCharacter = c.name; document.getElementById('characterSelect').value = c.name; renderCharacter(appState.selectedCharBook, c.name); }, itemName: (c) => c.name, startIndex: () => (bibleData[appState.selectedCharBook]?.characters || []).findIndex(c => c.name === appState.selectedCharacter) }
+            }[type];
+            const state = config.state;
+            const statusEl = document.getElementById(`audioStatus${type}`);
+
+            function playNext() {
+                if (!state.isPlaying) { stopSpeechKeepAlive(); resetAudioState(type, true); return; }
+                const items = config.getItems();
+                if (!items || state.currentIndex >= items.length) { if(statusEl) statusEl.textContent = `Maratona concluída!`; stopSpeechKeepAlive(); resetAudioState(type, true); return; }
+                config.updateUI(items[state.currentIndex]);
+                const text = audioConfigs[type].textGenerator(items[state.currentIndex]);
+                const speed = document.querySelector(`.speed-btn-${type.toLowerCase()}.active`)?.dataset.speed || 1;
+                state.utterance = new SpeechSynthesisUtterance(text);
+                state.utterance.lang = appState.currentLanguage;
+                state.utterance.rate = parseFloat(speed);
+                currentSpeech = state.utterance; currentSpeech._type = type;
+                state.utterance.onstart = () => { updateAudioButtons(type, true, false); if(statusEl) statusEl.textContent = `Reproduzindo: ${config.itemName(items[state.currentIndex])}...`; startSpeechKeepAlive(); };
+                state.utterance.onend = () => { state.currentIndex++; playNext(); };
+                state.utterance.onerror = () => { stopSpeechKeepAlive(); if(statusEl) statusEl.textContent = `Erro. Pulando...`; state.currentIndex++; setTimeout(playNext, 500); };
+                speechSynthesis.speak(state.utterance);
+            }
+            btn.addEventListener('click', () => { speechSynthesis.cancel(); Object.keys(audioConfigs).forEach(k => resetAudioState(k, k !== type)); state.isPlaying = true; const start = config.startIndex(); state.currentIndex = start >= 0 ? start : 0; playNext(); });
+        }
+        
+        function setupAllAudioListeners() {
+            Object.keys(audioConfigs).forEach(type => {
+                const state = audioConfigs[type].state;
+                document.getElementById(`pauseAudioBtn${type}`)?.addEventListener('click', () => { speechSynthesis.pause(); updateAudioButtons(type, true, true); if(state) state.isPaused = true; });
+                document.getElementById(`resumeAudioBtn${type}`)?.addEventListener('click', () => { speechSynthesis.resume(); updateAudioButtons(type, true, false); if(state) state.isPaused = false; });
+                document.getElementById(`stopAudioBtn${type}`)?.addEventListener('click', () => { if (state) state.isPlaying = false; speechSynthesis.cancel(); });
+                document.querySelectorAll(`.speed-btn-${type.toLowerCase()}`).forEach(btn => {
+                    btn.addEventListener('click', e => { const target = e.currentTarget; document.querySelectorAll(`.speed-btn-${type.toLowerCase()}`).forEach(b => b.classList.remove('active', 'bg-blue-600', 'text-white')); target.classList.add('active', 'bg-blue-600', 'text-white'); if (currentSpeech?._type === type && speechSynthesis.speaking) { currentSpeech.rate = parseFloat(target.dataset.speed); } });
+                });
+                if (type.includes('Marathon')) setupMarathonAudioHandler(type);
+                else setupSingleAudioHandler(type);
+            });
+        }
+        
+        function setupGlobalEventListeners() {
+            document.getElementById('ordinationSelect').addEventListener('change', e => { appState.ordination = e.target.value; const newFirstBook = getCurrentBookOrder()[0]; ['selectedBook', 'selectedChapterBook', 'selectedCharBook'].forEach(k => appState[k] = newFirstBook); appState.selectedChapter = 1; appState.selectedCharacter = null; appState.analysisFilter = 'geral'; updateAllContent(); saveStateToSession(); });
+            document.getElementById('languageSelect').addEventListener('change', e => changeLanguage(e.target.value));
+            document.getElementById('bookSelect').addEventListener('change', e => { appState.selectedBook = e.target.value; renderBookSummary(e.target.value); });
+            document.getElementById('chapterBookSelect').addEventListener('change', e => { appState.selectedChapterBook = e.target.value; populateChapterSelect(e.target.value); renderChapter(e.target.value, document.getElementById('chapterSelect').value); });
+            document.getElementById('chapterSelect').addEventListener('change', e => { appState.selectedChapter = e.target.value; renderChapter(appState.selectedChapterBook, e.target.value); });
+            document.getElementById('charBookSelect').addEventListener('change', e => { appState.selectedCharBook = e.target.value; populateCharacterSelect(e.target.value); });
+            document.getElementById('characterSelect').addEventListener('change', e => { appState.selectedCharacter = e.target.value; renderCharacter(appState.selectedCharBook, e.target.value); });
+            document.getElementById('analysisFilterSelect').addEventListener('change', e => { appState.analysisFilter = e.target.value; renderThemesChart(e.target.value); });
+            navButtons.forEach(button => { button.addEventListener('click', () => { speechSynthesis.cancel(); appState.currentView = button.dataset.view; render(); saveStateToSession(); }); });
+        }
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadStateFromSession();
+            init(); 
+            try {
+                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+                if (firebaseConfig) {
+                    const app = initializeApp(firebaseConfig);
+                    const db = getFirestore(app);
+                    const auth = getAuth(app);
+                    onAuthStateChanged(auth, async (user) => { if (!user) { try { if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token); else await signInAnonymously(auth); } catch (e) { console.error("Auth failed:", e); } } if (auth.currentUser) await incrementVisitorCount(db); });
+                } else { console.warn("Firebase config not found."); }
+            } catch (error) { console.error("Fatal error during Firebase init:", error); }
+        });
+
+        async function incrementVisitorCount(db) { const counterElement = document.getElementById('visitorCount'); if(!counterElement) return; const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'; const counterRef = doc(db, `artifacts/${appId}/public/data/visitor_counter/total`); try { await updateDoc(counterRef, { count: increment(1) }); const docSnap = await getDoc(counterRef); const count = docSnap.exists() ? docSnap.data().count : 1; counterElement.textContent = `Total de Visitantes: ${count}`; } catch (e) { await setDoc(counterRef, { count: 1 }); counterElement.textContent = `Total de Visitantes: 1`; } }
+
+        function changeLanguage(lang, isInitialLoad = false) {
+            appState.currentLanguage = lang;
+            if (!isInitialLoad) saveStateToSession();
+            document.getElementById('languageSelect').value = lang;
+            const langCodeOnly = lang.split('-')[0];
+            const googleTranslateElement = document.querySelector('#google_translate_element select');
+            if (googleTranslateElement) {
+                 if (googleTranslateElement.value !== langCodeOnly) {
+                    googleTranslateElement.value = langCodeOnly;
+                    googleTranslateElement.dispatchEvent(new Event('change'));
+                }
+            }
+        }
+        window.googleTranslateElementInit = function() { new google.translate.TranslateElement({pageLanguage: 'pt', autoDisplay: false}, 'google_translate_element'); }
     </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <footer class="text-center p-4 text-sm text-stone-500">
+        <div id="visitorCount"></div>
+    </footer>
+
 </body>
 </html>
