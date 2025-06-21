@@ -58,6 +58,7 @@
             <button data-view="explorarCapitulos" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Explorar Capítulos</button>
             <button data-view="personagens" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Personagens</button>
             <button data-view="comparacaoEvangelhos" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Comparação Evangelhos</button>
+	    <button data-view="analiseQuerigmatica" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Análise Querigmática</button>
             <button data-view="analiseTematica" class="nav-button text-sm sm:text-base font-semibold py-2 px-4 rounded-lg">Análise Temática</button>
         </nav>
 
@@ -68,6 +69,7 @@
             <section id="explorarCapitulos" class="view hidden"></section>
             <section id="personagens" class="view hidden"></section>
             <section id="comparacaoEvangelhos" class="view hidden"></section>
+            <section id="analiseQuerigmatica" class="view hidden"></section>
             <section id="analiseTematica" class="view hidden"></section>
         </main>
     </div>
@@ -852,6 +854,70 @@ characters: [
                 </div>
             `;
 
+const analiseQuerigmaticaView = document.getElementById('analiseQuerigmatica');
+analiseQuerigmaticaView.innerHTML = `
+    <div class="bg-white rounded-xl shadow-md p-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-amber-900 mb-6 text-center">
+            Análise Querigmática: As Verdades Comuns dos Evangelhos
+        </h2>
+
+        <div class="space-y-6 text-lg text-stone-700">
+            <p>Queridos irmãos e irmãs,</p>
+            <p>
+                Ao contemplarmos a riqueza dos Evangelhos, seja na narrativa de Marcos, na teologia profunda de João, na compaixão de Lucas ou na visão do Reino de Mateus, percebemos que, apesar das perspectivas únicas de cada evangelista, um coração comum pulsa em todas elas: o Querigma. O Querigma não é apenas uma mensagem; é o anúncio vibrante de uma realidade que transforma tudo. É a proclamação essencial que deu origem e sustenta a nossa fé.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
+                A Grande Ordem Comum: "Arrependei-vos e Crede no Evangelho!"
+            </h3>
+            <p>
+                Em Marcos (1,15), Jesus inicia seu ministério com esta ordem categórica: "O tempo está cumprido, e o Reino de Deus está próximo; arrependei-vos e crede no Evangelho." Mateus (3,2) e Lucas (3,8) ecoam o chamado ao arrependimento de João Batista, exigindo "frutos dignos de arrependimento". João, por sua vez, nos convida a "crer naquele que Deus enviou" (Jo 6,29).
+            </p>
+            <p class="italic">
+                <strong>Aplicação Cotidiana:</strong> Esta ordem não é um conselho, mas uma convocação urgente para uma mudança radical de mente e coração. No dia a dia, isso significa:
+                <ul class="list-disc list-inside ml-4 space-y-1 text-red-700">
+                    <li><strong class="font-bold">Reconhecer o erro:</strong> Ter a humildade de admitir nossos pecados e falhas, em vez de justificar-nos.</li>
+                    <li><strong class="font-bold">Mudar de direção:</strong> Afastar-nos daquilo que nos afasta de Deus, seja um hábito, uma mentalidade ou um relacionamento.</li>
+                    <li><strong class="font-bold">Confiar em Cristo:</strong> Colocar nossa fé não em nossas obras ou méritos, mas na pessoa de Jesus e em sua obra redentora. Aceitar a boa nova de Seu amor e salvação.</li>
+                </ul>
+            </p>
+
+            <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
+                A Magna Promessa Comum: "Tereis Vida em Meu Nome e o Espírito Santo"
+            </h3>
+            <p>
+                João afirma o propósito de seu Evangelho: "Para que, crendo, tenhais vida em seu nome" (Jo 20,31). Esta vida não é apenas existência, mas vida em abundância (Jo 10,10), vida eterna que começa agora. Mateus conclui com a promessa da presença constante de Jesus: "Eu estou convosco todos os dias, até o fim dos tempos" (Mt 28,20). Lucas (24,49) e Atos (1,5) destacam a promessa do Espírito Santo, que virá para capacitar os discípulos. Marcos (16,17-18) fala dos sinais que acompanharão os que creem.
+            </p>
+            <p class="italic">
+                <strong>Aplicação Cotidiana:</strong> As promessas divinas são o motor da nossa esperança. Elas nos garantem que não estamos sozinhos na jornada.
+                <ul class="list-disc list-inside ml-4 space-y-1 text-green-700">
+                    <li><strong class="font-bold">Confiança na Providência:</strong> Saber que Jesus está conosco em todas as circunstâncias, mesmo nas mais difíceis. Isso nos dá paz para enfrentar os desafios.</li>
+                    <li><strong class="font-bold">Poder para a Missão:</strong> O Espírito Santo, prometido e derramado, nos capacita a viver o Evangelho e a ser testemunhas eficazes. Invocar o Espírito antes de qualquer tarefa e buscar Sua guia.</li>
+                    <li><strong class="font-bold">Esperança da Vida Eterna:</strong> A certeza de que a vida em Cristo é eterna e plena, e que a morte não tem a última palavra. Isso nos liberta do medo e nos impulsiona a viver para o que realmente importa.</li>
+                </ul>
+            </p>
+
+            <h3 class="text-2xl font-semibold text-amber-900 mb-3 border-b-2 border-amber-200 pb-1">
+                O Princípio Universal: A Cruz, o Serviço e o Amor
+            </h3>
+            <p>
+                Em essência, todos os Evangelhos revelam o princípio paradoxal do Reino: a verdadeira grandeza e a vitória vêm através da humilhação, do serviço e do sacrifício. Marcos (10,45) afirma: "O Filho do Homem não veio para ser servido, mas para servir e dar a sua vida em resgate por muitos." João (13,14-15) mostra Jesus lavando os pés dos discípulos, deixando um exemplo de serviço humilde e um "novo mandamento": "Que vos ameis uns aos outros; como eu vos amei" (Jo 13,34). Mateus (16,24) enfatiza que seguir a Jesus significa "negar-se a si mesmo, tomar a sua cruz e segui-lo." Lucas, com suas parábolas da misericórdia, revela o princípio da predileção de Deus pelos pobres e pecadores.
+            </p>
+            <p class="italic">
+                <strong>Aplicação Cotidiana:</strong> Estes princípios são o DNA do discipulado cristão. Viver por eles é viver em conformidade com o coração de Cristo.
+                <ul class="list-disc list-inside ml-4 space-y-1 text-blue-700">
+                    <li><strong class="font-bold">Espírito de Serviço:</strong> Buscar servir ao invés de ser servido, especialmente os mais necessitados, vendo o próprio Cristo neles.</li>
+                    <li><strong class="font-bold">Amor Incondicional:</strong> Amar o próximo como Cristo nos amou, sem esperar nada em troca, perdoando e estendendo a mão, mesmo aos que nos ofendem.</li>
+                    <li><strong class="font-bold">Aceitação da Cruz:</strong> Entender que o sofrimento e as dificuldades fazem parte do caminho do discipulado e que, ao abraçá-los em união com Cristo, eles se tornam instrumentos de redenção.</li>
+                </ul>
+            </p>
+
+            <p class="mt-8">
+                Que estas ordens, promessas e princípios, comuns a todos os relatos evangélicos, nos inspirem a viver uma fé mais autêntica e corajosa, revelando o rosto de Cristo ao mundo em nossa vida diária. Amém.
+            </p>
+        </div>
+    </div>
+`;
 
             const views = document.querySelectorAll('.view');
             const navButtons = document.querySelectorAll('.nav-button');
